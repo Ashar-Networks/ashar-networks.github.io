@@ -1,0 +1,1675 @@
+<meta charset="utf-8">
+<title>Ashar Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Ashar, Gold Coast. Cisco CCNA and TAFE Diploma of IT student aiming for a junior network engineer role. Projects, labs and resume.">
+<meta property="og:title" content="Ashar Portfolio">
+<meta property="og:description" content="Cisco CCNA, networking and cloud student on the Gold Coast. Labs, projects and resume.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ashar-networks.github.io/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
+<script>try{var __m=localStorage.getItem("ashar-theme");document.documentElement.setAttribute("data-mode",__m==="light"?"light":"dark");}catch(e){document.documentElement.setAttribute("data-mode","dark");}</script>
+<style>
+/* Layout concept: the page behaves like a network. A live topology sits fixed behind everything,
+   a console answers questions in the hero, skills sit on the OSI stack, experience is a traceroute.
+   One indigo-to-cyan accent. Deliberately a single dark look, so there is no light theme. */
+:root {
+  --bg: #09090b;            /* zinc-950 */
+  --surface: rgba(24, 24, 27, 0.66);   /* zinc-900 glass */
+  --surface-solid: #131316;
+  --raise: rgba(255, 255, 255, 0.045);
+  --line: rgba(255, 255, 255, 0.09);
+  --line-hi: rgba(129, 140, 248, 0.45);
+  --fg: #fafafa;
+  --fg-2: #d4d4d8;
+  --muted: #a1a1aa;
+  --indigo: #818cf8;
+  --indigo-btn: #4f46e5;
+  --cyan: #22d3ee;
+  --glow: rgba(99, 102, 241, 0.35);
+  --nav: rgba(255, 255, 255, 0.05);
+  --box: rgba(0, 0, 0, 0.28);
+  --err: #fda4af;
+  --placeholder: #71717a;
+  --pkt: #ecfeff;
+  /* colour triplets, so the same tint can be written as rgba(var(--x-rgb), alpha) */
+  --bg-rgb: 9, 9, 11;
+  --ink-rgb: 255, 255, 255;
+  --cyan-rgb: 34, 211, 238;
+  --indigo-rgb: 129, 140, 248;
+  --glow-rgb: 99, 102, 241;
+  --shade-rgb: 0, 0, 0;
+  --f-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+/* Light mode: picked with the sun/moon switch. Dark is the default. */
+:root[data-mode="light"] {
+  --bg: #f6f6f9;
+  --surface: rgba(255, 255, 255, 0.8);
+  --surface-solid: #ffffff;
+  --raise: rgba(24, 24, 27, 0.04);
+  --line: rgba(24, 24, 27, 0.12);
+  --line-hi: rgba(67, 56, 202, 0.45);
+  --fg: #18181b;
+  --fg-2: #3f3f46;
+  --muted: #5d5d69;
+  --indigo: #4338ca;
+  --indigo-btn: #4f46e5;
+  --cyan: #0e7490;
+  --glow: rgba(79, 70, 229, 0.28);
+  --nav: rgba(255, 255, 255, 0.7);
+  --box: rgba(24, 24, 27, 0.035);
+  --err: #be123c;
+  --placeholder: #8a8a96;
+  --pkt: #0e7490;
+  --bg-rgb: 246, 246, 249;
+  --ink-rgb: 24, 24, 27;
+  --cyan-rgb: 14, 116, 144;
+  --indigo-rgb: 67, 56, 202;
+  --glow-rgb: 79, 70, 229;
+  --shade-rgb: 39, 39, 70;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+a { color: inherit; }
+/* Read-only text never shows a typing cursor (some browsers draw one with caret browsing on). Real inputs keep theirs. */
+body, body * { caret-color: transparent; }
+input, textarea { caret-color: var(--cyan); }
+h1, h2, h3, p, ul, ol, dl, dd { margin: 0; }
+ul, ol { padding: 0; }
+
+#bg { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; opacity: 1; display: block; pointer-events: none; }
+.page { position: relative; z-index: 1; }
+
+.in {
+  max-width: 1120px; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- navbar ---------- */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
+  background: var(--nav);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.prog { position: absolute; left: 0; bottom: -1px; width: 100%; height: 2px; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--indigo), var(--cyan)); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--f-display); font-size: 1.6rem; line-height: 1; }
+.brand i { width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px 2px var(--cyan); }
+.ttl { margin-right: auto; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; color: var(--muted); padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; }
+.ttl b { display: inline-block; min-width: 2ch; font-weight: 500; color: var(--cyan); font-variant-numeric: tabular-nums; }
+.menu { display: flex; align-items: center; gap: 4px; }
+.menu a.lnk { padding: 8px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color .2s, background .2s; }
+.menu a.lnk:hover, .menu a.lnk.on { color: var(--fg); background: var(--raise); }
+.menu a.lnk.on { box-shadow: inset 0 -2px 0 var(--cyan); }
+.burger { display: none; width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--raise); color: var(--fg); cursor: pointer; align-items: center; justify-content: center; }
+.burger span { display: block; width: 18px; height: 2px; background: currentColor; border-radius: 2px; position: relative; transition: background .2s; }
+.burger span::before, .burger span::after { content: ""; position: absolute; left: 0; width: 18px; height: 2px; background: currentColor; border-radius: 2px; transition: transform .25s; }
+.burger span::before { top: -6px; }
+.burger span::after { top: 6px; }
+.top.open .burger span { background: transparent; }
+.top.open .burger span::before { transform: translateY(6px) rotate(45deg); }
+.top.open .burger span::after { transform: translateY(-6px) rotate(-45deg); }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: 10px; border: 1px solid var(--line);
+  font: 500 15px/1.2 var(--f-body); color: var(--fg); text-decoration: none; cursor: pointer;
+  background: var(--raise); transition: border-color .2s, box-shadow .2s, background .2s;
+}
+.btn:hover { border-color: var(--line-hi); background: rgba(var(--indigo-rgb), 0.12); }
+.btn.primary { color: #fff; background: var(--indigo-btn); border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 28px -6px var(--glow); }
+.btn.primary:hover { background: #5b52f0; box-shadow: 0 0 36px -4px rgba(var(--glow-rgb), 0.6); }
+.btn.sm { padding: 8px 14px; font-size: 14px; }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.magnet { transition: transform .25s cubic-bezier(.2, .7, .2, 1), border-color .2s, box-shadow .2s, background .2s; will-change: transform; }
+
+/* ---------- hero ---------- */
+.hero { padding-block: clamp(48px, 8vw, 96px) 0; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 56px); align-items: start; }
+.eyebrow { font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+.eyebrow .pr { color: var(--indigo); letter-spacing: .04em; text-transform: none; }
+h1 { margin-top: 18px; font-family: var(--f-display); font-weight: 400; font-size: clamp(2.6rem, 6.4vw, 4.9rem); line-height: 1.03; letter-spacing: -0.015em; text-wrap: balance; }
+h1 em, h2 em { font-style: italic; background: linear-gradient(90deg, var(--indigo), var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--indigo); padding-right: .06em; }
+.lead { margin-top: 22px; max-width: 54ch; color: var(--fg-2); font-size: 1.06rem; }
+.stack { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 26px; }
+.stack .label { display: inline-flex; align-items: center; gap: 8px; margin-right: 6px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.stack .label i { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); animation: ping 2.4s ease-out infinite; }
+.badge { font-family: var(--f-mono); font-size: 12px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--raise); color: var(--fg-2); transition: border-color .2s, color .2s; }
+.badge:hover { border-color: var(--cyan); color: var(--cyan); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.hint { margin-top: 18px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .06em; color: var(--muted); }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(var(--cyan-rgb), .55); } 100% { box-shadow: 0 0 0 10px rgba(var(--cyan-rgb), 0); } }
+
+/* console */
+.term { min-width: 0; border: 1px solid var(--line); border-radius: 14px; background: rgba(var(--bg-rgb), 0.8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); overflow: hidden; font-family: var(--f-mono); transition: border-color .2s, box-shadow .2s; }
+.term:focus-within { border-color: var(--line-hi); box-shadow: 0 18px 50px -24px var(--glow); }
+.term-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+.term-bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(var(--ink-rgb), 0.16); }
+.term-bar i:first-child { background: var(--cyan); }
+.term-bar span { margin-left: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.term-out { height: clamp(260px, 38vh, 340px); overflow: auto; padding: 14px; font-size: 12.5px; line-height: 1.65; color: var(--fg-2); }
+.tline { white-space: pre-wrap; overflow-wrap: anywhere; animation: lnin .3s both; animation-delay: calc(var(--i, 0) * 28ms); }
+.tline.cmd { color: var(--fg); margin-top: 8px; animation: none; }
+.tline.cmd:first-child { margin-top: 0; }
+.tline .p { color: var(--cyan); }
+.tline.k { color: var(--indigo); }
+.tline.err { color: var(--err); }
+.tline.ok { color: var(--cyan); }
+@keyframes lnin { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+.term-cmds { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-top: 1px solid var(--line); }
+.term-cmds button { padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--raise); color: var(--fg-2); font: 400 12px/1.2 var(--f-mono); cursor: pointer; transition: border-color .2s, color .2s; }
+.term-cmds button:hover { border-color: var(--cyan); color: var(--cyan); }
+.term-in { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--line); }
+.term-in label { color: var(--cyan); font-size: 13px; white-space: nowrap; }
+.term-in input { flex: 1; min-width: 0; padding: 4px 0; background: transparent; border: 0; color: var(--fg); font: 400 16px var(--f-mono); outline: none; }
+
+/* ---------- sections ---------- */
+section.s { padding-block: clamp(64px, 9vw, 112px) 0; }
+.sh { margin-bottom: 32px; }
+h2.t { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-size: clamp(2rem, 4.6vw, 3.3rem); line-height: 1.08; letter-spacing: -0.01em; text-wrap: balance; max-width: 22ch; }
+
+.card {
+  position: relative; overflow: hidden; min-width: 0;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid var(--line); border-radius: 14px;
+  background: var(--surface);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  --mx: 50%; --my: 0%;
+}
+.card.glow::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(360px circle at var(--mx) var(--my), rgba(var(--glow-rgb), 0.2), transparent 70%);
+}
+.card.glow:hover { border-color: var(--line-hi); box-shadow: 0 18px 50px -24px var(--glow); }
+.card.glow:hover::before { opacity: 1; }
+.card > * { position: relative; }
+.card h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; }
+.kicker { font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* about */
+.about { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.tabs { display: grid; gap: 8px; }
+.tab { text-align: left; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--raise); color: var(--muted); font: 500 15px/1.3 var(--f-body); cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+.tab:hover { color: var(--fg); }
+.tab[aria-selected="true"] { color: var(--fg); border-color: var(--line-hi); background: rgba(var(--indigo-rgb), 0.12); box-shadow: inset 3px 0 0 var(--cyan); }
+.tab small { display: block; margin-top: 2px; font-weight: 400; font-size: 13px; color: var(--muted); }
+.panel p { color: var(--fg-2); font-size: 1.06rem; max-width: 62ch; }
+.panel p + p { margin-top: 14px; }
+.panel h3 { margin-bottom: 14px; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; margin-top: 24px; border-top: 1px solid var(--line); }
+.facts div { padding: 12px 0; border-bottom: 1px solid var(--line); min-width: 0; }
+.facts dt { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin-top: 2px; font-weight: 500; overflow-wrap: anywhere; }
+
+/* skills on the OSI stack */
+.osi { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.stackui { display: grid; gap: 6px; }
+.layer { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto 24px; gap: 10px; align-items: center; text-align: left; width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--raise); color: var(--fg-2); font: 500 14px/1.25 var(--f-body); cursor: pointer; transition: border-color .2s, background .2s, color .2s, opacity .2s; }
+.layer:hover { border-color: var(--line-hi); }
+.layer .lno { font-family: var(--f-mono); font-size: 12px; color: var(--indigo); }
+.layer .pdu { font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+.layer .ct { font-family: var(--f-mono); font-size: 12px; text-align: right; color: var(--cyan); font-variant-numeric: tabular-nums; }
+.layer.zero { opacity: .55; }
+.layer.tools { margin-top: 8px; border-style: dashed; }
+.layer.hl { border-color: var(--line-hi); background: rgba(var(--indigo-rgb), 0.16); }
+.layer[aria-pressed="true"], .layer.walk { border-color: var(--cyan); background: rgba(var(--cyan-rgb), 0.1); color: var(--fg); box-shadow: 0 0 24px -12px var(--cyan); }
+.chipcard { display: grid; gap: 20px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip { font-size: 14px; padding: 6px 11px; border: 1px solid var(--line); border-radius: 7px; background: var(--raise); color: var(--fg-2); transition: border-color .2s, background .2s, opacity .25s, color .2s, transform .2s; }
+.chip:hover { border-color: var(--cyan); color: var(--fg); }
+.chip.hit { border-color: var(--cyan); background: rgba(var(--cyan-rgb), 0.12); color: var(--fg); transform: translateY(-2px); }
+.chip.dim { opacity: .25; }
+.osi-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding-top: 18px; border-top: 1px solid var(--line); }
+.osi-cap { flex: 1 1 260px; min-width: 0; font-family: var(--f-mono); font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.osi-cap b { color: var(--cyan); font-weight: 500; }
+
+/* projects */
+.projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.projects .wide { grid-column: 1 / -1; }
+.proj { display: flex; flex-direction: column; gap: 14px; height: 100%; }
+.proj .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font-family: var(--f-mono); font-size: 11px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--indigo); background: var(--raise); }
+.proj p.body { color: var(--fg-2); max-width: 70ch; }
+.vlans { display: flex; flex-wrap: wrap; gap: 8px; }
+.vlans span { font-family: var(--f-mono); font-size: 12px; padding: 5px 10px; border-radius: 6px; background: rgba(var(--indigo-rgb), 0.14); }
+.vlans span b { color: var(--cyan); font-weight: 500; }
+.lab { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.box { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--box); display: flex; flex-direction: column; gap: 12px; }
+.box .kicker { color: var(--indigo); }
+
+.ros { width: 100%; height: auto; display: block; }
+.ros .lk { stroke: rgba(var(--ink-rgb), 0.22); stroke-width: 2; fill: none; transition: stroke .3s; }
+.ros .lk.trunk { stroke: rgba(var(--indigo-rgb), 0.45); stroke-width: 8; stroke-linecap: round; }
+.ros .lk.on { stroke: var(--cyan); }
+.ros .nd rect { fill: var(--surface-solid); stroke: rgba(var(--ink-rgb), 0.22); stroke-width: 1.5; transition: stroke .3s, fill .3s; }
+.ros .nd.on rect { stroke: var(--cyan); fill: rgba(var(--cyan-rgb), 0.12); }
+.ros text { fill: var(--fg); font: 500 13px var(--f-mono); text-anchor: middle; }
+.ros text.sub { fill: var(--muted); font-size: 11px; font-weight: 400; }
+.ros #rosPkt { transition: transform .9s cubic-bezier(.5, 0, .2, 1); }
+.ros #rosPkt circle.core { fill: var(--cyan); }
+.ros #rosPkt circle.halo { fill: rgba(var(--cyan-rgb), 0.25); }
+.ros #rosTag { fill: var(--cyan); font-size: 12px; stroke: var(--bg); stroke-width: 4px; paint-order: stroke; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+.cap { min-height: 4.8em; font-size: 14px; line-height: 1.55; color: var(--fg-2); }
+
+.sz-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.sz-row label { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.sz-row input[type="number"] { width: 92px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: rgba(var(--ink-rgb), 0.04); color: var(--fg); font: 500 16px var(--f-mono); }
+.sz-row input[type="number"]:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), 0.18); }
+.sz-row input[type="range"] { flex: 1 1 140px; min-width: 0; accent-color: var(--cyan); }
+.sz-bar { display: flex; gap: 2px; height: 44px; }
+.sz-bar button { flex: 1 1 0; min-width: 0; padding: 0; border: 0; border-radius: 3px; background: rgba(var(--indigo-rgb), 0.28); cursor: pointer; transition: background .2s, box-shadow .2s; }
+.sz-bar button:hover { background: rgba(var(--indigo-rgb), 0.5); }
+.sz-bar button.on { background: var(--cyan); box-shadow: 0 0 18px -2px var(--cyan); }
+.sz-scale { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+.readout { padding: 12px 14px; border-radius: 10px; border: 1px dashed var(--line); font-family: var(--f-mono); font-size: 12.5px; line-height: 1.7; color: var(--muted); overflow-wrap: anywhere; }
+.readout b { color: var(--fg); font-weight: 500; }
+.hintline { font-size: 13px; color: var(--muted); }
+
+/* experience as traceroute */
+.trace { padding: 0; }
+.tr-head { padding: 16px 20px; border-bottom: 1px solid var(--line); font-family: var(--f-mono); font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.tr-head .p { color: var(--cyan); }
+.hops { list-style: none; margin: 0; padding: 0; }
+.hop { border-bottom: 1px solid var(--line); }
+.hop:last-child { border-bottom: 0; }
+.hop-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto 18px; gap: 12px; align-items: baseline; width: 100%; padding: 18px 20px; background: none; border: 0; color: inherit; font: inherit; text-align: left; }
+button.hop-row { cursor: pointer; transition: background .2s; }
+button.hop-row:hover { background: var(--raise); }
+.hop .n { font-family: var(--f-mono); color: var(--indigo); }
+.hop .who { font-weight: 500; font-size: 1.05rem; }
+.hop .who small { display: block; margin-top: 2px; font-weight: 400; font-size: 14px; color: var(--muted); }
+.hop .ms { font-family: var(--f-mono); font-size: 12px; color: var(--cyan); text-align: right; }
+.hop .tg { font-family: var(--f-mono); color: var(--muted); }
+.hop.dest .who { font-family: var(--f-display); font-size: 1.7rem; font-weight: 400; line-height: 1.15; }
+.hop-body { padding: 0 20px 20px 64px; color: var(--fg-2); }
+.hop-body ul { padding-left: 18px; max-width: 68ch; }
+.hop-body li { margin-top: 6px; }
+.hop-body p { max-width: 62ch; }
+.hops.run .hop .ms { animation: resolve .5s both; animation-delay: calc(var(--i) * .4s); }
+@keyframes resolve { from { opacity: .1; } to { opacity: 1; } }
+
+/* credentials */
+.tblwrap { padding: 0; }
+.cred-tbl { width: 100%; border-collapse: collapse; }
+.cred-tbl caption { text-align: left; padding: 16px 20px; font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+.cred-tbl caption .p { color: var(--cyan); }
+.cred-tbl th { padding: 10px 20px; text-align: left; font-family: var(--f-mono); font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border-top: 1px solid var(--line); }
+.cred-tbl td { padding: 20px; border-top: 1px solid var(--line); vertical-align: top; }
+.cred-tbl td.nm { font-family: var(--f-display); font-size: 1.6rem; line-height: 1.15; width: 34%; }
+.cred-tbl td.dt { color: var(--fg-2); }
+.cred-tbl td.dt small { display: block; margin-top: 4px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+.st { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: 12px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
+.st i { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.st.pass { background: var(--indigo-btn); border-color: rgba(165, 180, 252, 0.5); color: #fff; }
+.st.pass i { background: #a5f3fc; }
+.st.doing { color: var(--cyan); border-color: rgba(var(--cyan-rgb), 0.4); }
+.st.doing i { background: var(--cyan); animation: ping 2.4s ease-out infinite; }
+.st.plan { color: var(--indigo); }
+.st.plan i { border: 1.5px solid var(--indigo); }
+
+/* contact */
+.contact { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+form { display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.field input, .field textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: rgba(var(--ink-rgb), 0.04); color: var(--fg); font: 400 16px/1.5 var(--f-body); transition: border-color .2s, box-shadow .2s; }
+.field textarea { min-height: 140px; resize: vertical; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), 0.18); }
+.field input::placeholder, .field textarea::placeholder { color: var(--placeholder); }
+.field .err { min-height: 1em; font-size: 13px; color: var(--err); }
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.fb { font-size: 14px; color: var(--fg-2); min-height: 1.4em; }
+.side { display: grid; gap: 16px; }
+.side h3 { font-size: 1.5rem; }
+.side p { color: var(--muted); margin-top: 8px; font-size: 15px; }
+.side .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+details.txt { margin-top: 16px; }
+details.txt summary { cursor: pointer; font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; color: var(--indigo); }
+details.txt pre { margin: 12px 0 0; max-height: 260px; overflow: auto; padding: 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--box); font: 12px/1.6 var(--f-mono); color: var(--fg-2); white-space: pre-wrap; user-select: text; }
+.direct { display: none; margin-top: 14px; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--f-mono); font-size: 13px; }
+.direct.show { display: flex; }
+
+/* light / dark switch */
+.theme { order: 2; position: relative; flex: none; display: inline-flex; align-items: center; justify-content: space-between; width: 62px; height: 34px; padding: 0 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--raise); cursor: pointer; transition: border-color .2s, background .2s; }
+.theme:hover { border-color: var(--line-hi); }
+.theme svg { position: relative; z-index: 1; width: 16px; height: 16px; transition: color .25s; }
+.theme .moon { color: var(--cyan); }
+.theme .sun { color: var(--muted); }
+.theme[aria-checked="true"] .moon { color: var(--muted); }
+.theme[aria-checked="true"] .sun { color: var(--cyan); }
+.theme .knob { position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--cyan); background: rgba(var(--cyan-rgb), .16); transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
+.theme[aria-checked="true"] .knob { transform: translateX(28px); }
+.menu { order: 1; }
+
+/* resume viewer */
+.rcard h3 { font-size: 1.5rem; }
+.rcard p.sm { margin-top: 8px; color: var(--muted); font-size: 15px; }
+.thumb { position: relative; display: block; width: 100%; margin-top: 16px; padding: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg); cursor: zoom-in; transition: border-color .2s, box-shadow .2s; }
+.thumb:hover { border-color: var(--line-hi); box-shadow: 0 18px 50px -24px var(--glow); }
+.thumb img { display: block; width: 100%; height: auto; }
+.thumb .zoom { position: absolute; right: 10px; bottom: 10px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line-hi); background: rgba(var(--bg-rgb), 0.85); font-family: var(--f-mono); font-size: 11px; letter-spacing: .04em; color: var(--cyan); }
+.rcard .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.lb { position: fixed; inset: 0; z-index: 60; overflow: auto; background: rgba(var(--bg-rgb), 0.9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+.lb-bar { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: calc(12px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-left, 0px)) 12px; background: rgba(var(--bg-rgb), 0.85); border-bottom: 1px solid var(--line); }
+.lb-bar .ctl { display: flex; flex-wrap: wrap; gap: 8px; }
+.lb-page { width: min(100% - 32px, 860px); margin: 20px auto 0; }
+.lb-page img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 30px 80px -30px rgba(var(--shade-rgb), .9); }
+.lb-page p { margin-top: 12px; text-align: center; font-family: var(--f-mono); font-size: 11px; color: var(--muted); }
+
+.prsheet { z-index: 65; padding: calc(20px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.prsheet:not([hidden]) { display: flex; }
+.pr-card { width: min(100%, 640px); margin: auto; padding: clamp(20px, 4vw, 28px); border: 1px solid var(--line-hi); border-radius: 14px; background: var(--surface-solid); box-shadow: 0 30px 80px -30px rgba(var(--shade-rgb), .9); display: grid; gap: 14px; }
+.pr-card h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2rem); line-height: 1.15; }
+.pr-card p.sm { color: var(--muted); font-size: 15px; }
+.pr-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.opt { position: relative; display: block; min-width: 0; cursor: pointer; }
+.opt input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.opt .oc { display: grid; gap: 4px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--raise); transition: border-color .2s, background .2s, box-shadow .2s; }
+.opt:hover .oc { border-color: var(--line-hi); }
+.opt input:checked + .oc { border-color: var(--cyan); background: rgba(var(--cyan-rgb), 0.08); box-shadow: 0 0 26px -12px var(--cyan); }
+.opt input:focus-visible + .oc { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.opt img { display: block; width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--line); }
+.opt .ot { margin-top: 4px; font-weight: 600; font-size: 15px; }
+.opt .od { font-size: 13px; color: var(--muted); }
+.pr-card .ctl { display: flex; flex-wrap: wrap; gap: 10px; }
+
+footer { margin-top: clamp(72px, 10vw, 120px); padding-block: 24px 40px; border-top: 1px solid var(--line); }
+footer .in { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
+footer a { text-decoration: none; }
+footer a:hover { color: var(--cyan); }
+
+.toast {
+  position: fixed; z-index: 70;
+  left: calc(16px + env(safe-area-inset-left, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 12px 16px; border-radius: 10px; border: 1px solid var(--line-hi); background: var(--surface-solid);
+  font-size: 14px; box-shadow: 0 12px 40px -12px rgba(var(--shade-rgb), .8);
+  opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .25s, transform .25s;
+}
+.toast.show { opacity: 1; transform: none; }
+
+/* scroll reveal: starts dim but readable */
+.rv { opacity: .4; transform: translateY(18px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: var(--d, 0s); }
+.rv.show { opacity: 1; transform: none; }
+
+@media (max-width: 960px) {
+  .hero-grid, .osi, .lab { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .about, .contact { grid-template-columns: minmax(0, 1fr); }
+  .tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 820px) {
+  .burger { display: inline-flex; order: 2; }
+  .theme { order: 1; }
+  .menu { order: 3; }
+  .brand { margin-right: auto; }
+  .ttl { display: none; }
+  .menu { display: none; flex-direction: column; align-items: stretch; gap: 2px; padding-block: 4px 16px; width: 100%; }
+  .top.open { background: rgba(var(--bg-rgb), 0.86); }
+  .top.open .menu { display: flex; }
+  .menu a.lnk { padding: 12px; font-size: 16px; }
+  .menu a.lnk.on { box-shadow: inset 3px 0 0 var(--cyan); }
+  .menu .btn { margin-top: 8px; }
+  .bar { flex-wrap: wrap; }
+  .projects { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .cred-tbl thead { position: absolute; left: -9999px; }
+  .cred-tbl, .cred-tbl tbody, .cred-tbl tr, .cred-tbl td { display: block; }
+  .cred-tbl td { border-top: 0; padding: 4px 20px; }
+  .cred-tbl tr { padding: 16px 0; border-top: 1px solid var(--line); }
+  .cred-tbl td.nm { width: auto; }
+  .cred-tbl td[data-label]::before { content: attr(data-label); display: block; font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .cred-tbl td.nm::before { display: none; }
+}
+@media (max-width: 600px) {
+  .tabs { grid-template-columns: minmax(0, 1fr); }
+  .facts { grid-template-columns: minmax(0, 1fr); }
+  .hop-row { grid-template-columns: 28px minmax(0, 1fr) 18px; padding: 16px; }
+  .hop .ms { grid-column: 2; grid-row: 2; text-align: left; }
+  .hop .tg { grid-column: 3; grid-row: 1; }
+  .hop-body { padding: 0 16px 18px 56px; }
+  .layer { grid-template-columns: 28px minmax(0, 1fr) 24px; }
+  .layer .pdu { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .rv { opacity: 1; transform: none; }
+}
+</style>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div class="page">
+  <header class="top" id="top">
+    <div class="in">
+      <div class="bar">
+        <a class="brand" href="#top" aria-label="Ashar, back to top"><i></i>Ashar</a>
+        <span class="ttl" aria-hidden="true" title="Falls as you scroll, like a packet crossing hops">ttl=<b id="ttlv">64</b></span>
+        <button class="theme" id="themeBtn" type="button" role="switch" aria-checked="false" aria-label="Light mode" title="Switch between dark and light">
+          <span class="knob" aria-hidden="true"></span>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span></button>
+        <nav class="menu" id="menu" aria-label="Sections">
+          <a class="lnk" href="#about">About</a>
+          <a class="lnk" href="#skills">Skills</a>
+          <a class="lnk" href="#projects">Projects</a>
+          <a class="lnk" href="#experience">Experience</a>
+          <a class="lnk" href="#credentials">Credentials</a>
+          <a class="lnk" href="#contact">Contact</a>
+          <button class="btn sm primary js-view" type="button">Resume</button>
+        </nav>
+      </div>
+    </div>
+    <div class="prog" id="prog" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="in">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Ashar · Gold Coast, Queensland</p>
+            <h1>I build networks, then <em>troubleshoot them</em> until they work.</h1>
+            <p class="lead">Networking and cloud engineering student with a passed Cisco CCNA and two years advising customers on networking at Officeworks. Looking for a junior network engineer role.</p>
+            <div class="stack" aria-label="Tech stack">
+              <span class="label"><i></i>In the lab</span>
+              <span class="badge">Cisco IOS</span>
+              <span class="badge">VLANs</span>
+              <span class="badge">OSPF</span>
+              <span class="badge">Windows Server</span>
+              <span class="badge">Active Directory</span>
+              <span class="badge">Hyper-V</span>
+              <span class="badge">Ubuntu</span>
+              <span class="badge">Packet Tracer</span>
+            </div>
+            <div class="cta">
+              <button class="btn primary magnet js-resume" type="button" data-magnet="6">Download Resume</button>
+              <a class="btn magnet" href="#contact" data-magnet="6">Get in Touch</a>
+              <a class="btn magnet" href="https://github.com/Ashar-Networks" target="_blank" rel="noopener noreferrer" data-magnet="6">GitHub</a>
+            </div>
+            <p class="hint">Click or tap the background to send a packet through the network.</p>
+          </div>
+
+          <div class="term rv" id="term">
+            <div class="term-bar"><i></i><i></i><i></i><span>ashar@gold-coast · console</span></div>
+            <div class="term-out" id="termOut" role="log" aria-live="polite" tabindex="0" aria-label="Console output"></div>
+            <div class="term-cmds" id="termCmds" aria-label="Quick commands">
+              <button type="button" data-cmd="show about">show about</button>
+              <button type="button" data-cmd="show skills">show skills</button>
+              <button type="button" data-cmd="show projects">show projects</button>
+              <button type="button" data-cmd="show experience">show experience</button>
+              <button type="button" data-cmd="show education">show education</button>
+              <button type="button" data-cmd="show vlan brief">show vlan brief</button>
+              <button type="button" data-cmd="ping ashar">ping ashar</button>
+              <button type="button" data-cmd="?">?</button>
+            </div>
+            <form class="term-in" id="termForm" autocomplete="off">
+              <label for="termIn">ashar#</label>
+              <input id="termIn" type="text" spellcheck="false" autocapitalize="none" autocorrect="off" autocomplete="off" placeholder="type ? for commands" aria-label="Type a command, or ? for help">
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="about">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> show about</p>
+          <h2 class="t">Hands-on first, then the theory behind it.</h2>
+        </div>
+        <div class="about">
+          <div class="tabs rv" role="tablist" aria-label="About me">
+            <button class="tab" role="tab" id="tab-build" aria-selected="true" aria-controls="p-build" type="button">What I build<small>Labs and troubleshooting</small></button>
+            <button class="tab" role="tab" id="tab-work" aria-selected="false" aria-controls="p-work" tabindex="-1" type="button">How I work<small>Two years with customers</small></button>
+            <button class="tab" role="tab" id="tab-next" aria-selected="false" aria-controls="p-next" tabindex="-1" type="button">What is next<small>Study and career</small></button>
+          </div>
+          <div class="card rv" style="--d:.08s">
+            <div class="panel" id="p-build" role="tabpanel" aria-labelledby="tab-build">
+              <h3>Labs that get broken, then fixed</h3>
+              <p>I build switched networks in Cisco Packet Tracer and run a Windows Server domain in Hyper-V at home, with an Ubuntu machine joined to it.</p>
+              <p>When something fails I follow the logs. In the domain lab I traced a Kerberos pre-authentication failure back to a password issue, then kept going through the logs for the error that was left.</p>
+            </div>
+            <div class="panel" id="p-work" role="tabpanel" aria-labelledby="tab-work" hidden>
+              <h3>Start with what the customer needs</h3>
+              <p>In the technology department at Officeworks I work out what each customer needs, then recommend technology that fits their budget, goals and use case.</p>
+              <p>For networking, that means sizing the solution to the number of devices, the size of the office, the budget and the NBN plan. I troubleshoot problems from simple faults to complex ones.</p>
+            </div>
+            <div class="panel" id="p-next" role="tabpanel" aria-labelledby="tab-next" hidden>
+              <h3>From the diploma to a degree</h3>
+              <p>I am studying the Diploma of Information Technology at TAFE until July 2027. After that I plan to study a Bachelor of Information Technology at Griffith University with a major in Networks and Cyber Security.</p>
+              <p>The goal is a junior network engineer role.</p>
+            </div>
+            <dl class="facts">
+              <div><dt>Based</dt><dd>Gold Coast, Queensland</dd></div>
+              <div><dt>Studying</dt><dd>TAFE · ICT50220</dd></div>
+              <div><dt>Certified</dt><dd>Cisco CCNA</dd></div>
+              <div><dt>Working</dt><dd>Officeworks · 2 years</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="skills">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> show skills</p>
+          <h2 class="t">Every skill, <em>layer by layer</em>.</h2>
+        </div>
+        <div class="osi">
+          <div class="stackui rv" id="stackui" role="group" aria-label="Filter skills by OSI layer">
+            <button class="layer" type="button" data-l="7" aria-pressed="false"><span class="lno">L7</span><span>Application</span><span class="pdu">Data</span><span class="ct"></span></button>
+            <button class="layer" type="button" data-l="6" aria-pressed="false"><span class="lno">L6</span><span>Presentation</span><span class="pdu">Data</span><span class="ct"></span></button>
+            <button class="layer" type="button" data-l="5" aria-pressed="false"><span class="lno">L5</span><span>Session</span><span class="pdu">Data</span><span class="ct"></span></button>
+            <button class="layer" type="button" data-l="4" aria-pressed="false"><span class="lno">L4</span><span>Transport</span><span class="pdu">Segment</span><span class="ct"></span></button>
+            <button class="layer" type="button" data-l="3" aria-pressed="false"><span class="lno">L3</span><span>Network</span><span class="pdu">Packet</span><span class="ct"></span></button>
+            <button class="layer" type="button" data-l="2" aria-pressed="false"><span class="lno">L2</span><span>Data link</span><span class="pdu">Frame</span><span class="ct"></span></button>
+            <button class="layer" type="button" data-l="1" aria-pressed="false"><span class="lno">L1</span><span>Physical</span><span class="pdu">Bits</span><span class="ct"></span></button>
+            <button class="layer tools" type="button" data-l="T" aria-pressed="false"><span class="lno">+</span><span>Systems, tools and practice</span><span class="pdu"></span><span class="ct"></span></button>
+          </div>
+          <div class="card rv chipcard" style="--d:.08s">
+            <div>
+              <p class="kicker">Network skills</p>
+              <div class="chips">
+                <span class="chip" data-l="7">DHCP</span>
+                <span class="chip" data-l="7">DNS</span>
+                <span class="chip" data-l="7">Active Directory</span>
+                <span class="chip" data-l="7">Kerberos troubleshooting</span>
+                <span class="chip" data-l="3,4">ACLs</span>
+                <span class="chip" data-l="3,4">NAT</span>
+                <span class="chip" data-l="3">OSPF</span>
+                <span class="chip" data-l="3">Static routing</span>
+                <span class="chip" data-l="3">Inter-VLAN routing</span>
+                <span class="chip" data-l="3">IPv4 and IPv6</span>
+                <span class="chip" data-l="3">VLSM subnetting</span>
+                <span class="chip" data-l="2">VLANs and trunking</span>
+                <span class="chip" data-l="2">STP</span>
+                <span class="chip" data-l="2">EtherChannel</span>
+                <span class="chip" data-l="2">Port security</span>
+                <span class="chip" data-l="1,2">Wi-Fi networking</span>
+              </div>
+            </div>
+            <div>
+              <p class="kicker">Systems, tools and practice</p>
+              <div class="chips">
+                <span class="chip" data-l="T">Cisco IOS CLI</span>
+                <span class="chip" data-l="T">Cisco Packet Tracer</span>
+                <span class="chip" data-l="T">Windows Server</span>
+                <span class="chip" data-l="T">Hyper-V</span>
+                <span class="chip" data-l="T">Ubuntu Linux</span>
+                <span class="chip" data-l="T">journalctl log reading</span>
+                <span class="chip" data-l="T">Config auditing</span>
+                <span class="chip" data-l="T">Encrypted cloud backup</span>
+                <span class="chip" data-l="T">Network segmentation</span>
+                <span class="chip" data-l="T">Customer troubleshooting</span>
+                <span class="chip" data-l="T">Solution recommendations</span>
+                <span class="chip" data-l="T">ICT project planning</span>
+                <span class="chip" data-l="T">Business analysis tools</span>
+              </div>
+            </div>
+            <div class="osi-foot">
+              <button class="btn sm primary" id="sendPkt" type="button">Send a packet down the stack</button>
+              <p class="osi-cap" id="osiCap" aria-live="polite">Select a layer to light up the skills I use there. Hover a skill to see its layers.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="projects">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> show projects</p>
+          <h2 class="t">Labs you can <em>poke at</em>.</h2>
+        </div>
+        <div class="projects">
+          <div class="wide rv">
+            <article class="card glow proj">
+              <div class="meta"><span class="pill">Cisco Packet Tracer</span><span class="pill">ICTNWK542 / 543</span></div>
+              <h3>Campus switching and routing lab</h3>
+              <p class="body">Three access switches and two distribution switches, with inter-VLAN routing on a Cisco 1841 using router-on-a-stick. The 192.168.235.0/24 range is split into four /26 subnets.</p>
+              <div class="vlans" aria-label="VLANs">
+                <span><b>VLAN 10</b> HR</span><span><b>VLAN 20</b> Sales</span><span><b>VLAN 90</b> Management</span>
+              </div>
+              <div class="lab">
+                <div class="box">
+                  <p class="kicker">How router-on-a-stick works</p>
+                  <svg class="ros" id="rosSvg" viewBox="0 0 520 300" role="img" aria-label="Diagram: a PC in VLAN 10 and a PC in VLAN 20 connect to one switch, and the switch connects to a router over a single trunk link">
+                    <line class="lk" id="lk10" x1="92" y1="62" x2="200" y2="138"/>
+                    <line class="lk" id="lk20" x1="92" y1="238" x2="200" y2="162"/>
+                    <line class="lk trunk" id="lkT" x1="268" y1="150" x2="388" y2="150"/>
+                    <g class="nd" id="nd-pc10" transform="translate(20,34)"><rect width="76" height="56" rx="8"/><text x="38" y="26">PC</text><text class="sub" x="38" y="43">VLAN 10</text></g>
+                    <g class="nd" id="nd-pc20" transform="translate(20,210)"><rect width="76" height="56" rx="8"/><text x="38" y="26">PC</text><text class="sub" x="38" y="43">VLAN 20</text></g>
+                    <g class="nd" id="nd-sw" transform="translate(200,118)"><rect width="68" height="64" rx="8"/><text x="34" y="36">Switch</text></g>
+                    <g class="nd" id="nd-rt" transform="translate(388,112)"><rect width="100" height="76" rx="8"/><text x="50" y="36">Router</text><text class="sub" x="50" y="54">Cisco 1841</text></g>
+                    <text class="sub" x="58" y="108">HR</text>
+                    <text class="sub" x="58" y="284">Sales</text>
+                    <text class="sub" x="328" y="188">one trunk link</text>
+                    <g id="rosPkt" style="transform: translate(58px, 62px)"><circle class="halo" r="14"/><circle class="core" r="6"/><text id="rosTag" y="-18"></text></g>
+                  </svg>
+                  <p class="cap" id="rosCap" aria-live="polite"></p>
+                  <div class="ctl">
+                    <button class="btn sm primary" id="rosPlay" type="button">Send packet</button>
+                    <button class="btn sm" id="rosStep" type="button">Step</button>
+                    <button class="btn sm" id="rosReset" type="button">Reset</button>
+                  </div>
+                  <p class="hintline">Simplified to one switch. The lab uses five.</p>
+                </div>
+                <div class="box">
+                  <p class="kicker">Size a subnet</p>
+                  <div class="sz-row">
+                    <label for="hostsIn">Hosts needed</label>
+                    <input id="hostsIn" type="number" min="1" max="254" value="50" inputmode="numeric">
+                  </div>
+                  <div class="sz-bar" id="szBar" aria-hidden="true"></div>
+                  <div class="sz-scale" aria-hidden="true"><span>192.168.235.0</span><span>.255</span></div>
+                  <div class="sz-row">
+                    <label for="szIdx">Subnet</label>
+                    <input id="szIdx" type="range" min="0" max="3" value="0">
+                    <span class="hintline" id="szIdxLab"></span>
+                  </div>
+                  <p class="readout" id="readout" aria-live="polite"></p>
+                  <p class="hintline">Pick the smallest block that fits the hosts. 50 hosts gives the four /26 subnets from the lab.</p>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="rv" style="--d:.05s">
+            <article class="card glow magnet proj" data-tilt="1">
+              <div class="meta"><span class="pill">Hyper-V</span><span class="pill">Windows Server</span><span class="pill">Ubuntu</span></div>
+              <h3>Active Directory home lab</h3>
+              <p class="body">A Windows Server domain running in Hyper-V, with an Ubuntu VM being joined to it. I traced a Kerberos pre-authentication failure back to a password issue and worked through the logs for the error that remained.</p>
+            </article>
+          </div>
+
+          <div class="rv" style="--d:.1s">
+            <article class="card glow magnet proj" data-tilt="1">
+              <div class="meta"><span class="pill">Case study</span><span class="pill">TQLD Lawyers</span></div>
+              <h3>Digital records proposal</h3>
+              <p class="body">A pitch for a firm of 15 lawyers, 5 administrators and 3 receptionists moving off paper records. The chosen concept is encrypted cloud backup with department-segmented synced folders and client file access.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="experience">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> show experience</p>
+          <h2 class="t">Tracing the route to a <em>junior network role</em>.</h2>
+        </div>
+        <div class="card trace rv">
+          <p class="tr-head"><span class="p">ashar$</span> traceroute junior-network-engineer-role</p>
+          <ol class="hops" id="hops">
+            <li class="hop" style="--i:0">
+              <button class="hop-row" type="button" aria-expanded="true" aria-controls="hb1">
+                <span class="n">1</span>
+                <span class="who">Technology department<small>Officeworks</small></span>
+                <span class="ms">part-time · 2 years</span>
+                <span class="tg" aria-hidden="true">−</span>
+              </button>
+              <div class="hop-body" id="hb1">
+                <ul>
+                  <li>Worked out what each customer needed, then recommended technology to fit their budget, goals and use case.</li>
+                  <li>Advised tens of customers on networking, choosing between product types and sizing the solution to their number of devices, office size, budget and NBN plan.</li>
+                  <li>Advised customers on choosing an NBN plan.</li>
+                  <li>Troubleshot customer issues from simple faults to complex ones.</li>
+                </ul>
+              </div>
+            </li>
+            <li class="hop" style="--i:1">
+              <button class="hop-row" type="button" aria-expanded="false" aria-controls="hb2">
+                <span class="n">2</span>
+                <span class="who">Diploma of Information Technology<small>TAFE · Advanced Networking and Cloud Engineering</small></span>
+                <span class="ms">Jul 2026 to Jul 2027</span>
+                <span class="tg" aria-hidden="true">+</span>
+              </button>
+              <div class="hop-body" id="hb2" hidden>
+                <p>Studied at TAFE on the Gold Coast. Course code ICT50220, CRICOS 107313E.</p>
+              </div>
+            </li>
+            <li class="hop" style="--i:2">
+              <button class="hop-row" type="button" aria-expanded="false" aria-controls="hb3">
+                <span class="n">3</span>
+                <span class="who">Bachelor of Information Technology<small>Griffith University · Networks and Cyber Security major</small></span>
+                <span class="ms">planned, after the diploma</span>
+                <span class="tg" aria-hidden="true">+</span>
+              </button>
+              <div class="hop-body" id="hb3" hidden>
+                <p>Planned for the Gold Coast, once the diploma is finished.</p>
+              </div>
+            </li>
+            <li class="hop dest" style="--i:3">
+              <div class="hop-row">
+                <span class="n">4</span>
+                <span class="who">Junior network engineer role</span>
+                <span class="ms">destination</span>
+                <span class="tg" aria-hidden="true"></span>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="credentials">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> show education</p>
+          <h2 class="t">What is done, and what is <em>in progress</em>.</h2>
+        </div>
+        <div class="card tblwrap rv">
+          <table class="cred-tbl">
+            <caption><span class="p">ashar#</span> show credentials</caption>
+            <thead><tr><th scope="col">Credential</th><th scope="col">Detail</th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              <tr>
+                <td class="nm">Cisco CCNA</td>
+                <td class="dt" data-label="Detail">Routing, switching and network services: OSPF, STP, EtherChannel, ACLs, NAT, DHCP and DNS.</td>
+                <td data-label="Status"><span class="st pass"><i></i>Passed</span></td>
+              </tr>
+              <tr>
+                <td class="nm">Diploma of Information Technology</td>
+                <td class="dt" data-label="Detail">Advanced Networking and Cloud Engineering, TAFE, Gold Coast.<small>ICT50220 · CRICOS 107313E</small></td>
+                <td data-label="Status"><span class="st doing"><i></i>In progress, completes Jul 2027</span></td>
+              </tr>
+              <tr>
+                <td class="nm">Bachelor of Information Technology</td>
+                <td class="dt" data-label="Detail">Networks and Cyber Security major, Griffith University, Gold Coast.</td>
+                <td data-label="Status"><span class="st plan"><i></i>Planned</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="s" id="contact">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> ping ashar</p>
+          <h2 class="t">Hiring for a junior network role? <em>Say hello</em>.</h2>
+        </div>
+        <div class="contact">
+          <div class="card rv">
+            <form id="contactForm" novalidate>
+              <div class="field">
+                <label for="cf-name">Your name</label>
+                <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="120" placeholder="Alex Morgan" required>
+                <span class="err" id="err-name" aria-live="polite"></span>
+              </div>
+              <div class="field">
+                <label for="cf-email">Your email</label>
+                <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="alex@company.com" required>
+                <span class="err" id="err-email" aria-live="polite"></span>
+              </div>
+              <div class="field">
+                <label for="cf-message">Message</label>
+                <textarea id="cf-message" name="message" maxlength="2000" placeholder="Tell me about the role or the project." required></textarea>
+                <span class="err" id="err-message" aria-live="polite"></span>
+              </div>
+              <div class="form-actions">
+                <button class="btn primary magnet" id="sendBtn" type="submit" data-magnet="5">Send message</button>
+                <button class="btn" id="copyMsg" type="button" hidden>Copy message</button>
+                <span class="fb" id="formFb" role="status" aria-live="polite"></span>
+              </div>
+            </form>
+          </div>
+
+          <div class="side rv" style="--d:.08s">
+            <div class="card rcard" id="resume">
+              <h3>Resume</h3>
+              <p class="sm">One page, A4. Select it to read it full size. Print offers an ink-friendly version.</p>
+              <button class="thumb js-view" type="button" aria-label="View my resume full size">
+                <img src="resume-page.png" width="1654" height="2339" loading="lazy" alt="Page one of Ashar's resume: summary, Cisco CCNA, Diploma of Information Technology at TAFE, skills, three projects and two years at Officeworks.">
+                <span class="zoom">View full size</span>
+              </button>
+              <div class="btns">
+                <button class="btn primary js-resume" type="button">Download PDF</button>
+                <button class="btn js-print" type="button">Print</button>
+                <button class="btn js-view" type="button">View full size</button>
+              </div>
+              <div class="direct" id="direct"><span id="directAddr"></span><button class="btn sm" id="copyAddr" type="button">Copy address</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="in">
+      <span>Ashar · Gold Coast, Queensland</span>
+      <span>Cisco CCNA · ICT50220 · CRICOS 107313E</span>
+      <a href="https://github.com/Ashar-Networks" target="_blank" rel="noopener noreferrer">github.com/Ashar-Networks</a>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Resume viewer" hidden>
+  <div class="lb-bar">
+    <span class="kicker" id="lbName">Ashar-Resume.pdf · 1 page</span>
+    <div class="ctl">
+      <button class="btn sm primary js-resume" id="lbDl" type="button">Download PDF</button>
+      <button class="btn sm js-print" id="lbPrint" type="button">Print</button>
+      <a class="btn sm" id="lbOpen" href="Ashar-Resume.pdf" target="_blank" rel="noopener">Open PDF</a>
+      <button class="btn sm" id="lbClose" type="button">Close</button>
+    </div>
+  </div>
+  <div class="lb-page">
+    <img src="resume-page.png" width="1654" height="2339" alt="Ashar's resume, page one: summary, certification and education, skills, projects and experience.">
+    <p>The PDF has a link to my website at the top and bottom.</p>
+  </div>
+</div>
+
+<div class="lb prsheet" id="pr" role="dialog" aria-modal="true" aria-labelledby="prTitle" hidden>
+  <div class="pr-card">
+    <p class="kicker">Print resume</p>
+    <h3 id="prTitle">Print an ink-friendly version?</h3>
+    <p class="sm">The ink-friendly version has a white background and dark text, so it uses very little ink. The other keeps the dark look of this site.</p>
+    <fieldset class="pr-opts">
+      <legend class="kicker" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Resume version</legend>
+      <label class="opt"><input type="radio" name="ver" value="light" checked><span class="oc"><img src="resume-page-light.png" width="1654" height="2339" loading="lazy" alt="Ink-friendly resume with a white background"><span class="ot">Yes, ink-friendly</span><span class="od">White background</span></span></label>
+      <label class="opt"><input type="radio" name="ver" value="dark"><span class="oc"><img src="resume-page.png" width="1654" height="2339" loading="lazy" alt="Dark resume matching this site"><span class="ot">No, keep it dark</span><span class="od">Matches this site</span></span></label>
+    </fieldset>
+    <div class="ctl">
+      <a class="btn primary" id="prOpen" href="Ashar-Resume-Ink-Friendly.pdf" target="_blank" rel="noopener">Open PDF to print</a>
+      <button class="btn" id="prDl" type="button">Download PDF</button>
+      <button class="btn" id="prClose" type="button">Cancel</button>
+    </div>
+    <p class="hintline">This page cannot open your print dialog. Open the PDF, then choose Print in your PDF viewer.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var fine = !!(window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches);
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* Set this to a public address to show it beside the resume buttons. */
+  var PUBLIC_EMAIL = '';
+  /* Settings for hosting off Claude (GitHub Pages).
+     FORM_ENDPOINT: a Formspree address such as https://formspree.io/f/xxxxxxxx (free, forwards messages to your inbox).
+     CONTACT_EMAIL: used when there is no endpoint, so the form opens the visitor's email app instead. */
+  var GITHUB_URL = 'https://github.com/Ashar-Networks';
+  var FORM_ENDPOINT = '';
+  var CONTACT_EMAIL = '';
+
+  /* ---------- toast ---------- */
+  var toastEl = $('#toast'), toastTimer = 0;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 4200);
+  }
+
+  /* ---------- fixed network background, click to send a packet ---------- */
+  var cv = $('#bg'), ctx = cv && cv.getContext ? cv.getContext('2d') : null;
+  var ripple = function () {};
+  var recolor = function () {};
+  if (ctx) {
+    var IND = '129,140,248', CY = '34,211,238', PKT = '#ecfeff';
+    var readColors = function () {
+      var cs = getComputedStyle(document.documentElement);
+      var v = function (n, d) { var x = cs.getPropertyValue(n).trim(); return x || d; };
+      IND = v('--indigo-rgb', IND); CY = v('--cyan-rgb', CY); PKT = v('--pkt', PKT);
+    };
+    recolor = function () { readColors(); if (reduce) draw(); };
+    var W = 0, H = 0, dpr = 1, nodes = [], packets = [], link = 150;
+    var ptr = { x: -999, y: -999 }, last = 0, spawnIn = 0, running = false;
+
+    var mk = function () {
+      var a = Math.random() * 6.283, s = 0.05 + Math.random() * 0.11;
+      return { x: Math.random() * W, y: Math.random() * H, vx: Math.cos(a) * s, vy: Math.sin(a) * s, hub: Math.random() < 0.18, fire: 0 };
+    };
+    var dist = function (a, b) { var dx = a.x - b.x, dy = a.y - b.y; return Math.sqrt(dx * dx + dy * dy); };
+    var size = function () {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth; H = window.innerHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      link = Math.max(110, Math.min(190, W / 6));
+      var n = Math.max(22, Math.min(70, Math.round(W * H / 16000)));
+      if (n < nodes.length) nodes.length = n;
+      while (nodes.length < n) nodes.push(mk());
+      nodes.forEach(function (p) { p.x = Math.min(p.x, W); p.y = Math.min(p.y, H); });
+      if (reduce) draw();
+    };
+    var step = function (dt) {
+      var k = dt / 16, i, p, dx, dy, d;
+      for (i = 0; i < nodes.length; i++) {
+        p = nodes[i];
+        p.x += p.vx * k; p.y += p.vy * k;
+        if (p.x < 0 || p.x > W) p.vx *= -1;
+        if (p.y < 0 || p.y > H) p.vy *= -1;
+        dx = ptr.x - p.x; dy = ptr.y - p.y; d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 180 && d > 1) { p.x += dx / d * 0.45 * k * (1 - d / 180); p.y += dy / d * 0.45 * k * (1 - d / 180); }
+      }
+      for (i = packets.length - 1; i >= 0; i--) {
+        var pk = packets[i];
+        pk.t += dt * 0.0007 * pk.s;
+        if (pk.t >= 1 || dist(pk.a, pk.b) > link * 1.25) packets.splice(i, 1);
+      }
+      spawnIn -= dt;
+      if (spawnIn <= 0 && packets.length < 14) {
+        spawnIn = 300 + Math.random() * 500;
+        var a = nodes[Math.floor(Math.random() * nodes.length)], near = [], j;
+        for (j = 0; j < nodes.length; j++) if (nodes[j] !== a && dist(a, nodes[j]) < link) near.push(nodes[j]);
+        if (near.length) packets.push({ a: a, b: near[Math.floor(Math.random() * near.length)], t: 0, s: 0.8 + Math.random() * 0.8 });
+      }
+    };
+    var draw = function () {
+      ctx.clearRect(0, 0, W, H);
+      var now = performance.now();
+      var i, j, a, b, d, pl = link * 1.2;
+      ctx.lineWidth = 1;
+      for (i = 0; i < nodes.length; i++) {
+        a = nodes[i];
+        for (j = i + 1; j < nodes.length; j++) {
+          b = nodes[j]; d = dist(a, b);
+          if (d < link) {
+            ctx.strokeStyle = 'rgba(' + IND + ',' + ((1 - d / link) * 0.3).toFixed(3) + ')';
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+        d = dist(a, ptr);
+        if (d < pl) {
+          ctx.strokeStyle = 'rgba(' + CY + ',' + ((1 - d / pl) * 0.55).toFixed(3) + ')';
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(ptr.x, ptr.y); ctx.stroke();
+        }
+      }
+      for (i = 0; i < nodes.length; i++) {
+        a = nodes[i];
+        var col = a.hub ? CY : IND, r = a.hub ? 3.2 : 1.8;
+        ctx.fillStyle = 'rgba(' + col + ',0.14)';
+        ctx.beginPath(); ctx.arc(a.x, a.y, r * 3.2, 0, 6.283); ctx.fill();
+        ctx.fillStyle = 'rgba(' + col + ',0.85)';
+        ctx.beginPath(); ctx.arc(a.x, a.y, r, 0, 6.283); ctx.fill();
+        if (a.hub) {
+          ctx.strokeStyle = 'rgba(' + CY + ',0.4)';
+          ctx.beginPath(); ctx.arc(a.x, a.y, r + 5, 0, 6.283); ctx.stroke();
+        }
+        if (a.fire && now >= a.fire && now - a.fire < 1000) {
+          var age = (now - a.fire) / 1000;
+          ctx.strokeStyle = 'rgba(' + CY + ',' + ((1 - age) * 0.85).toFixed(3) + ')';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(a.x, a.y, r + 4 + age * 34, 0, 6.283); ctx.stroke();
+          ctx.lineWidth = 1;
+          ctx.fillStyle = 'rgba(' + CY + ',' + ((1 - age) * 0.9).toFixed(3) + ')';
+          ctx.beginPath(); ctx.arc(a.x, a.y, r + 2, 0, 6.283); ctx.fill();
+        }
+      }
+      for (i = 0; i < packets.length; i++) {
+        var pk = packets[i], x = pk.a.x + (pk.b.x - pk.a.x) * pk.t, y = pk.a.y + (pk.b.y - pk.a.y) * pk.t;
+        ctx.fillStyle = 'rgba(' + CY + ',0.28)';
+        ctx.beginPath(); ctx.arc(x, y, 6, 0, 6.283); ctx.fill();
+        ctx.fillStyle = PKT;
+        ctx.beginPath(); ctx.arc(x, y, 1.9, 0, 6.283); ctx.fill();
+      }
+    };
+    var frame = function (ts) {
+      if (!running) return;
+      var dt = Math.min(40, ts - last || 16); last = ts;
+      step(dt); draw();
+      requestAnimationFrame(frame);
+    };
+    var start = function () { if (reduce || running) return; running = true; last = 0; requestAnimationFrame(frame); };
+    var stop = function () { running = false; };
+
+    ripple = function (x, y) {
+      if (reduce || !nodes.length) return;
+      var s = 0, best = 1e9, i, j, d;
+      for (i = 0; i < nodes.length; i++) {
+        d = Math.sqrt((nodes[i].x - x) * (nodes[i].x - x) + (nodes[i].y - y) * (nodes[i].y - y));
+        if (d < best) { best = d; s = i; }
+      }
+      var hops = new Array(nodes.length), q = [s], u, v;
+      hops[s] = 0;
+      while (q.length) {
+        u = q.shift();
+        for (v = 0; v < nodes.length; v++) {
+          if (hops[v] === undefined && dist(nodes[u], nodes[v]) < link) { hops[v] = hops[u] + 1; q.push(v); }
+        }
+      }
+      var t0 = performance.now();
+      for (j = 0; j < nodes.length; j++) nodes[j].fire = hops[j] === undefined ? 0 : t0 + hops[j] * 130;
+    };
+
+    window.addEventListener('pointermove', function (e) { ptr.x = e.clientX; ptr.y = e.clientY; }, { passive: true });
+    window.addEventListener('pointerout', function (e) { if (!e.relatedTarget) { ptr.x = -999; ptr.y = -999; } });
+    window.addEventListener('resize', size);
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : start(); });
+    readColors();
+    size();
+    if (reduce) draw(); else start();
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('a,button,input,textarea,select,summary,label,[role="tab"],.card,.term,.top,.toast,.box')) return;
+    ripple(e.clientX, e.clientY);
+  });
+
+  /* ---------- navbar, hamburger, active link, TTL ---------- */
+  var top = $('#top'), burger = $('#burger');
+  function setMenu(open) {
+    top.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  burger.addEventListener('click', function () { setMenu(!top.classList.contains('open')); });
+  $$('#menu a, #menu button').forEach(function (el) { el.addEventListener('click', function () { setMenu(false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && top.classList.contains('open')) { setMenu(false); burger.focus(); } });
+
+  /* the name and "Back to top" scroll to the very top (the navbar itself is sticky, so #top alone goes nowhere) */
+  $$('a[href="#top"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      setMenu(false);
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  });
+
+  var links = $$('#menu a.lnk');
+  if ('IntersectionObserver' in window) {
+    var spy = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (l) { l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id); });
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    $$('main section.s').forEach(function (s) { spy.observe(s); });
+  }
+  var ttlEl = $('#ttlv'), progEl = $('#prog'), ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var h = document.documentElement.scrollHeight - window.innerHeight;
+      var p = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
+      ttlEl.textContent = Math.max(1, Math.round(64 - 63 * p));
+      progEl.style.transform = 'scaleX(' + p.toFixed(3) + ')';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- scroll reveal ---------- */
+  var rv = $$('.rv');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    rv.forEach(function (el) { io.observe(el); });
+  } else {
+    rv.forEach(function (el) { el.classList.add('show'); });
+  }
+
+  /* ---------- magnetic buttons, tilting project cards, card spotlight ---------- */
+  if (fine && !reduce) {
+    $$('[data-magnet]').forEach(function (el) {
+      var pull = parseFloat(el.getAttribute('data-magnet')) || 6;
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = 'translate(' + (x * pull * 2).toFixed(1) + 'px,' + (y * pull * 2).toFixed(1) + 'px)';
+      });
+      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
+    });
+    $$('[data-tilt]').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.transform = 'perspective(1000px) translate(' + (x * 10).toFixed(1) + 'px,' + (y * 8).toFixed(1) + 'px) rotateX(' + (-y * 2.5).toFixed(2) + 'deg) rotateY(' + (x * 3).toFixed(2) + 'deg)';
+      });
+      el.addEventListener('pointerleave', function () { el.style.transform = ''; });
+    });
+  }
+  $$('.card.glow').forEach(function (c) {
+    c.addEventListener('pointermove', function (e) {
+      var r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+
+  /* ---------- about tabs ---------- */
+  var tabs = $$('.tab');
+  function selectTab(t, focus) {
+    tabs.forEach(function (x) {
+      var on = x === t;
+      x.setAttribute('aria-selected', on ? 'true' : 'false');
+      x.tabIndex = on ? 0 : -1;
+      $('#' + x.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) t.focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { selectTab(t, false); });
+    t.addEventListener('keydown', function (e) {
+      var n = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') n = tabs[(i + 1) % tabs.length];
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') n = tabs[(i + tabs.length - 1) % tabs.length];
+      if (n) { e.preventDefault(); selectTab(n, true); }
+    });
+  });
+
+  /* ---------- OSI stack skills explorer ---------- */
+  var layerBtns = $$('.layer'), chipEls = $$('.osi .chip'), osiCap = $('#osiCap');
+  var DEFAULT_CAP = 'Select a layer to light up the skills I use there. Hover a skill to see its layers.';
+  var LAYER_NAME = { '7': 'Application', '6': 'Presentation', '5': 'Session', '4': 'Transport', '3': 'Network', '2': 'Data link', '1': 'Physical', 'T': 'Systems, tools and practice' };
+  var LAYER_PDU = { '7': 'Data', '6': 'Data', '5': 'Data', '4': 'Segment', '3': 'Packet', '2': 'Frame', '1': 'Bits' };
+  var selLayer = null, walking = false, walkTimers = [];
+
+  function chipLayers(c) { return c.getAttribute('data-l').split(','); }
+  layerBtns.forEach(function (b) {
+    var l = b.getAttribute('data-l');
+    var n = chipEls.filter(function (c) { return chipLayers(c).indexOf(l) !== -1; }).length;
+    b.querySelector('.ct').textContent = n;
+    if (n === 0) b.classList.add('zero');
+  });
+  function skillNames(l) {
+    return chipEls.filter(function (c) { return chipLayers(c).indexOf(l) !== -1; }).map(function (c) { return c.textContent; });
+  }
+  function applyFilter(l) {
+    chipEls.forEach(function (c) {
+      var hit = l !== null && chipLayers(c).indexOf(l) !== -1;
+      c.classList.toggle('hit', hit);
+      c.classList.toggle('dim', l !== null && !hit);
+    });
+    layerBtns.forEach(function (b) { b.classList.remove('hl'); });
+  }
+  function describe(l) {
+    var names = skillNames(l);
+    if (!names.length) return 'Layer ' + l + ' · ' + LAYER_NAME[l] + ': nothing from my skills list sits here.';
+    if (l === 'T') return LAYER_NAME.T + ': ' + names.join(', ') + '.';
+    return 'Layer ' + l + ' · ' + LAYER_NAME[l] + ' (' + LAYER_PDU[l] + '): ' + names.join(', ') + '.';
+  }
+  function setSelected(l) {
+    selLayer = l;
+    layerBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-l') === l ? 'true' : 'false'); });
+    applyFilter(l);
+    osiCap.textContent = l === null ? DEFAULT_CAP : describe(l);
+  }
+  layerBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (walking) stopWalk();
+      var l = b.getAttribute('data-l');
+      setSelected(selLayer === l ? null : l);
+    });
+  });
+  chipEls.forEach(function (c) {
+    var on = function () {
+      if (walking || selLayer !== null) return;
+      var ls = chipLayers(c);
+      layerBtns.forEach(function (b) { b.classList.toggle('hl', ls.indexOf(b.getAttribute('data-l')) !== -1); });
+    };
+    var off = function () { layerBtns.forEach(function (b) { b.classList.remove('hl'); }); };
+    c.addEventListener('pointerenter', on); c.addEventListener('pointerleave', off);
+  });
+  function stopWalk() {
+    walking = false;
+    walkTimers.forEach(clearTimeout); walkTimers = [];
+    layerBtns.forEach(function (b) { b.classList.remove('walk'); });
+    $('#sendPkt').disabled = false;
+  }
+  $('#sendPkt').addEventListener('click', function () {
+    if (walking) return;
+    setSelected(null);
+    walking = true;
+    this.disabled = true;
+    var order = ['7', '6', '5', '4', '3', '2', '1'], i = 0;
+    var tick = function () {
+      layerBtns.forEach(function (b) { b.classList.toggle('walk', b.getAttribute('data-l') === order[i]); });
+      applyFilter(order[i]);
+      var names = skillNames(order[i]);
+      osiCap.innerHTML = '';
+      var b1 = document.createElement('b'); b1.textContent = 'L' + order[i] + ' ' + LAYER_NAME[order[i]];
+      osiCap.appendChild(b1);
+      osiCap.appendChild(document.createTextNode(' · adds a ' + LAYER_PDU[order[i]].toLowerCase() + (names.length ? ' · ' + names.join(', ') : ' · no skills mapped here')));
+      i++;
+      if (i < order.length) { walkTimers.push(setTimeout(tick, 900)); }
+      else {
+        walkTimers.push(setTimeout(function () {
+          stopWalk();
+          setSelected(null);
+          osiCap.textContent = 'Bits are on the wire. The receiving side reads them back up the stack.';
+        }, 1100));
+      }
+    };
+    tick();
+  });
+
+  /* ---------- router-on-a-stick animation ---------- */
+  var STOPS = [
+    { x: 58, y: 62, tag: '', on: ['nd-pc10', 'lk10'], cap: 'A PC in VLAN 10 (HR) sends a frame to a PC in VLAN 20 (Sales). They are on different subnets, so the frame goes to the router, which is the default gateway.' },
+    { x: 232, y: 150, tag: '', on: ['nd-sw', 'lk10'], cap: 'The switch receives the frame on a VLAN 10 port. A switch on its own cannot move traffic between VLANs.' },
+    { x: 328, y: 138, tag: 'VLAN 10', on: ['lkT'], cap: 'The switch tags the frame with VLAN 10 and sends it over the single trunk link to the router.' },
+    { x: 438, y: 150, tag: '10 to 20', on: ['nd-rt'], cap: 'The router receives it on its VLAN 10 sub-interface, looks up the destination and chooses the VLAN 20 sub-interface.' },
+    { x: 328, y: 162, tag: 'VLAN 20', on: ['lkT'], cap: 'The router sends it back out through the same trunk, now tagged VLAN 20. One physical link carries both directions, which is why it is called a stick.' },
+    { x: 232, y: 150, tag: 'VLAN 20', on: ['nd-sw', 'lk20'], cap: 'The switch receives the VLAN 20 frame from the trunk.' },
+    { x: 58, y: 238, tag: '', on: ['nd-pc20', 'lk20'], cap: 'The switch removes the tag and delivers the frame to the PC in VLAN 20 (Sales).' }
+  ];
+  var rosIdx = 0, rosTimer = 0;
+  var rosIds = ['nd-pc10', 'nd-pc20', 'nd-sw', 'nd-rt', 'lk10', 'lk20', 'lkT'];
+  function rosShow(i) {
+    rosIdx = i;
+    var s = STOPS[i];
+    $('#rosPkt').style.transform = 'translate(' + s.x + 'px, ' + s.y + 'px)';
+    $('#rosTag').textContent = s.tag;
+    rosIds.forEach(function (id) {
+      var el = document.getElementById(id);
+      el.classList.toggle('on', s.on.indexOf(id) !== -1);
+    });
+    $('#rosCap').textContent = s.cap;
+  }
+  function rosStop() { clearInterval(rosTimer); rosTimer = 0; $('#rosPlay').disabled = false; }
+  $('#rosStep').addEventListener('click', function () { rosStop(); rosShow((rosIdx + 1) % STOPS.length); });
+  $('#rosReset').addEventListener('click', function () { rosStop(); rosShow(0); });
+  $('#rosPlay').addEventListener('click', function () {
+    rosStop();
+    rosShow(0);
+    $('#rosPlay').disabled = true;
+    rosTimer = setInterval(function () {
+      if (rosIdx >= STOPS.length - 1) { rosStop(); return; }
+      rosShow(rosIdx + 1);
+    }, 1900);
+  });
+  rosShow(0);
+
+  /* ---------- subnet sizer ---------- */
+  var hostsIn = $('#hostsIn'), szBar = $('#szBar'), szIdx = $('#szIdx'), szLab = $('#szIdxLab'), out = $('#readout');
+  var szCount = 0;
+  function szRender() {
+    var h = parseInt(hostsIn.value, 10);
+    if (!(h >= 1 && h <= 254)) { out.textContent = 'Enter a number of hosts from 1 to 254.'; return; }
+    var p = 24, block = 256, q;
+    for (q = 30; q >= 24; q--) { if (Math.pow(2, 32 - q) - 2 >= h) { p = q; break; } }
+    block = Math.pow(2, 32 - p);
+    var count = 256 / block;
+    var idx = Math.min(parseInt(szIdx.value, 10) || 0, count - 1);
+    if (count !== szCount) {
+      szCount = count;
+      szBar.innerHTML = '';
+      for (var i = 0; i < count; i++) {
+        (function (n) {
+          var b = document.createElement('button');
+          b.type = 'button'; b.tabIndex = -1;
+          b.addEventListener('click', function () { szIdx.value = n; szRender(); });
+          szBar.appendChild(b);
+        })(i);
+      }
+    }
+    szIdx.max = count - 1; szIdx.value = idx; szIdx.disabled = count === 1;
+    $$('button', szBar).forEach(function (b, i) { b.className = i === idx ? 'on' : ''; });
+    szLab.textContent = (idx + 1) + ' of ' + count;
+    var base = idx * block, mask = 256 - block;
+    out.innerHTML = '<b>192.168.235.' + base + '/' + p + '</b> · mask 255.255.255.' + mask + '<br>usable hosts <b>.' + (base + 1) + '</b> to <b>.' + (base + block - 2) + '</b> · broadcast <b>.' + (base + block - 1) + '</b> · ' + (block - 2) + ' hosts';
+  }
+  hostsIn.addEventListener('input', szRender);
+  szIdx.addEventListener('input', szRender);
+  szRender();
+
+  /* ---------- traceroute experience ---------- */
+  $$('button.hop-row').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+      $('#' + btn.getAttribute('aria-controls')).hidden = open;
+      btn.querySelector('.tg').textContent = open ? '+' : '−';
+    });
+  });
+  var hopsEl = $('#hops');
+  if ('IntersectionObserver' in window && !reduce) {
+    var hio = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { hopsEl.classList.add('run'); hio.unobserve(e.target); } });
+    }, { threshold: 0.3 });
+    hio.observe(hopsEl);
+  }
+
+  /* ---------- capabilities (null when this view cannot run them) ---------- */
+  var downloads = null, db = null;
+  if (window.claude && typeof window.claude.use === 'function') {
+    window.claude.use('downloads').then(function (d) { downloads = d; }).catch(function () {});
+    window.claude.use('db').then(function (d) { db = d; }).catch(function () {});
+  }
+
+  function copyText(text, fallback) {
+    var done = function () { toast('Copied to your clipboard.'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else { fallback(); }
+  }
+
+  /* ---------- modals: resume viewer and print chooser ---------- */
+  var lb = $('#lb'), pr = $('#pr'), modalStack = [], modalOpeners = [];
+  function openModal(el, opener, first) {
+    if (modalStack.indexOf(el) !== -1) return;
+    modalStack.push(el); modalOpeners.push(opener || document.activeElement);
+    el.hidden = false;
+    document.body.style.overflow = 'hidden';
+    el.scrollTop = 0;
+    if (first) first.focus();
+  }
+  function closeModal(el) {
+    var i = modalStack.indexOf(el);
+    if (i === -1) return;
+    var opener = modalOpeners[i];
+    modalStack.splice(i, 1); modalOpeners.splice(i, 1);
+    el.hidden = true;
+    if (!modalStack.length) document.body.style.overflow = '';
+    if (opener && opener.focus) opener.focus();
+  }
+  function openViewer(from) { openModal(lb, from, $('#lbClose')); }
+  function openPrint(from) {
+    var def = $('input[name="ver"][value="light"]');
+    if (def) { def.checked = true; syncPrint(); }
+    openModal(pr, from, $('#prOpen'));
+  }
+  $$('.js-view').forEach(function (b) { b.addEventListener('click', function () { openViewer(b); }); });
+  $$('.js-print').forEach(function (b) { b.addEventListener('click', function () { openPrint(b); }); });
+  $('#lbClose').addEventListener('click', function () { closeModal(lb); });
+  $('#prClose').addEventListener('click', function () { closeModal(pr); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeModal(lb); });
+  pr.addEventListener('click', function (e) { if (e.target === pr) closeModal(pr); });
+  document.addEventListener('keydown', function (e) {
+    if (!modalStack.length) return;
+    var top = modalStack[modalStack.length - 1];
+    if (e.key === 'Escape') { closeModal(top); return; }
+    if (e.key === 'Tab') {
+      var f = $$('a[href], button:not([disabled]), input:checked', top).filter(function (x) { return x.offsetParent !== null || x.type === 'radio'; });
+      if (!f.length) return;
+      var i = f.indexOf(document.activeElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && (i === f.length - 1 || i === -1)) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  /* print chooser: ink-friendly is the default */
+  var PDFS = { light: 'Ashar-Resume-Ink-Friendly.pdf', dark: 'Ashar-Resume.pdf' };
+  function chosenVersion() { var r = $('input[name="ver"]:checked'); return r ? r.value : 'light'; }
+  function syncPrint() { $('#prOpen').setAttribute('href', PDFS[chosenVersion()]); }
+  $$('input[name="ver"]').forEach(function (r) { r.addEventListener('change', syncPrint); });
+  syncPrint();
+
+  function doResume(file) {
+    var name = typeof file === 'string' ? file : PDFS[currentMode()];
+    var fallback = function (msg) { if (!modalStack.length) openViewer(document.activeElement); toast(msg); };
+    if (!downloads) {
+      /* hosted normally (GitHub Pages): a plain download link works */
+      if (location.protocol === 'http:' || location.protocol === 'https:') {
+        var a = document.createElement('a');
+        a.href = name; a.download = name; a.rel = 'noopener';
+        document.body.appendChild(a); a.click(); a.remove();
+        toast('Resume downloading.');
+        return;
+      }
+      fallback('Downloads are not available in this view. Use Open PDF instead.'); return;
+    }
+    fetch(name).then(function (r) {
+      if (!r.ok) throw new Error('missing');
+      return r.blob();
+    }).then(function (blob) {
+      return downloads.save({ filename: name, data: blob });
+    }).then(function () {
+      toast('Resume saved.');
+    }).catch(function (err) {
+      if (err && err.code === 'declined') { toast('Download cancelled.'); return; }
+      fallback('The PDF could not be saved. Use Open PDF instead.');
+    });
+  }
+  $$('.js-resume').forEach(function (btn) { btn.addEventListener('click', function () { doResume(); }); });
+  $('#prDl').addEventListener('click', function () { doResume(PDFS[chosenVersion()]); });
+
+  /* ---------- light / dark switch (dark is the default) ---------- */
+  var root = document.documentElement, themeBtn = $('#themeBtn');
+  function currentMode() { return root.getAttribute('data-mode') === 'light' ? 'light' : 'dark'; }
+  function applyMode(m, save) {
+    root.setAttribute('data-mode', m);
+    themeBtn.setAttribute('aria-checked', m === 'light' ? 'true' : 'false');
+    /* the resume you see, download and open follows the mode: white PDF in light, dark PDF in dark */
+    var img = m === 'light' ? 'resume-page-light.png' : 'resume-page.png';
+    $$('.thumb img, .lb-page img').forEach(function (i) { if (i.getAttribute('src') !== img) i.setAttribute('src', img); });
+    $('#lbOpen').setAttribute('href', PDFS[m]);
+    $('#lbName').textContent = PDFS[m] + ' · 1 page';
+    recolor();
+    if (save) { try { localStorage.setItem('ashar-theme', m); } catch (e) {} }
+  }
+  themeBtn.addEventListener('click', function () { applyMode(currentMode() === 'light' ? 'dark' : 'light', true); });
+  applyMode(currentMode(), false);
+  if (PUBLIC_EMAIL) {
+    $('#directAddr').textContent = PUBLIC_EMAIL;
+    $('#direct').classList.add('show');
+    $('#copyAddr').addEventListener('click', function () {
+      copyText(PUBLIC_EMAIL, function () { toast('Copy is blocked here. Select the address instead.'); });
+    });
+  }
+
+  /* ---------- hero console ---------- */
+  var termOut = $('#termOut'), termIn = $('#termIn'), history = [], hIdx = 0;
+  function printLines(lines, cls) {
+    lines.forEach(function (t, i) {
+      var d = document.createElement('div');
+      d.className = 'tline' + (cls ? ' ' + cls : '');
+      d.style.setProperty('--i', Math.min(i, 14));
+      d.textContent = t;
+      termOut.appendChild(d);
+    });
+    termOut.scrollTop = termOut.scrollHeight;
+  }
+  function echo(raw) {
+    var d = document.createElement('div');
+    d.className = 'tline cmd';
+    var p = document.createElement('span'); p.className = 'p'; p.textContent = 'ashar# ';
+    d.appendChild(p); d.appendChild(document.createTextNode(raw));
+    termOut.appendChild(d);
+  }
+  var COMMANDS = [
+    { name: 'show about', help: 'who I am', run: function () { printLines([
+      'Ashar · Gold Coast, Queensland',
+      'Networking and cloud engineering student. Passed Cisco CCNA.',
+      'Two years in the technology department at Officeworks.',
+      'Studying the Diploma of Information Technology until July 2027.',
+      'Looking for a junior network engineer role.'
+    ]); } },
+    { name: 'show skills', help: 'what I work with', run: function () { printLines([
+      'Routing and switching: Cisco IOS CLI, VLANs and trunking, inter-VLAN routing, static routing, OSPF, STP, EtherChannel, VLSM subnetting, IPv4 and IPv6',
+      'Services and security: DHCP, DNS, NAT, ACLs, port security, Wi-Fi networking, config auditing',
+      'Servers and virtualisation: Windows Server, Active Directory, Hyper-V, Ubuntu Linux, Kerberos troubleshooting, journalctl log reading',
+      'Tools and planning: Cisco Packet Tracer, network segmentation, customer troubleshooting, project planning'
+    ]); } },
+    { name: 'show projects', help: 'labs and case studies', run: function () { printLines([
+      '1. Campus switching and routing lab (Packet Tracer): 3 access and 2 distribution switches, router-on-a-stick on a Cisco 1841, 192.168.235.0/24 split into four /26 subnets',
+      '2. Active Directory home lab (Hyper-V): Windows Server domain with an Ubuntu VM being joined, Kerberos pre-authentication failure traced to a password issue',
+      '3. Digital records proposal (TQLD Lawyers): encrypted cloud backup with department-segmented synced folders for 23 staff'
+    ]); } },
+    { name: 'show experience', help: 'work history', run: function () { printLines([
+      'Officeworks, Technology department. Part-time, 2 years.',
+      '- Worked out customer needs and recommended technology by budget, goals and use case',
+      '- Advised tens of customers on networking: product type, sizing by devices, office size, budget and NBN plan',
+      '- Advised customers on choosing an NBN plan',
+      '- Troubleshot issues from simple faults to complex ones'
+    ]); } },
+    { name: 'show education', help: 'study and certification', run: function () { printLines([
+      'Cisco CCNA ............ passed',
+      'Diploma of IT (Advanced Networking and Cloud Engineering), TAFE ... in progress, Jul 2026 to Jul 2027',
+      'Bachelor of IT (Networks and Cyber Security), Griffith University ... planned'
+    ]); } },
+    { name: 'show vlan brief', help: 'VLANs in my campus lab', run: function () { printLines([
+      'Campus switching and routing lab',
+      'VLAN  Name         Status',
+      '10    HR           active',
+      '20    Sales        active',
+      '90    Management   active'
+    ]); } },
+    { name: 'ping ashar', help: 'check I am reachable', run: function () { printLines([
+      'Sending 5, 100-byte ICMP Echos to ashar, timeout is 2 seconds:',
+      '!!!!!',
+      'Success rate is 100 percent (5/5). Use the contact form to say hello.'
+    ], 'ok'); } },
+    { name: 'github', help: 'open my GitHub', run: function () {
+      printLines(['Opening ' + GITHUB_URL.replace('https://', '') + ' in a new tab...']);
+      window.open(GITHUB_URL, '_blank', 'noopener');
+    } },
+    { name: 'resume', help: 'download my resume', run: function () { printLines(['Starting resume download...']); doResume(); } },
+    { name: 'contact', help: 'jump to the contact form', run: function () {
+      printLines(['Opening the contact form...']);
+      $('#contact').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    } },
+    { name: 'clear', help: 'clear the screen', run: function () { termOut.innerHTML = ''; } },
+    { name: 'help', help: 'list commands', run: function () {
+      var rows = ['Commands (abbreviations work, Tab completes):'];
+      COMMANDS.forEach(function (c) { if (c.name !== 'help') rows.push('  ' + (c.name + '                    ').slice(0, 18) + c.help); });
+      printLines(rows, 'k');
+    } }
+  ];
+  function resolveCmd(raw) {
+    var words = raw.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) return { t: 'empty' };
+    if (words[0] === '?') return { t: 'cmd', cmd: COMMANDS[COMMANDS.length - 1] };
+    var full = [], partial = false;
+    COMMANDS.forEach(function (cmd) {
+      var cw = cmd.name.split(' ');
+      var ok = words.length <= cw.length && words.every(function (w, i) { return cw[i].indexOf(w) === 0; });
+      if (!ok) return;
+      if (words.length === cw.length) full.push(cmd); else partial = true;
+    });
+    if (full.length === 1) return { t: 'cmd', cmd: full[0] };
+    if (full.length > 1) return { t: 'ambig' };
+    if (partial) return { t: 'incomplete' };
+    return { t: 'invalid' };
+  }
+  function runCommand(raw) {
+    echo(raw);
+    var r = resolveCmd(raw);
+    if (r.t === 'cmd') r.cmd.run();
+    else if (r.t === 'ambig') printLines(['% Ambiguous command. Type ? for a list of commands.'], 'err');
+    else if (r.t === 'incomplete') printLines(['% Incomplete command. Type ? for a list of commands.'], 'err');
+    else if (r.t === 'invalid') printLines(['% Invalid input detected. Type ? for a list of commands.'], 'err');
+    termOut.scrollTop = termOut.scrollHeight;
+  }
+  $('#termForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var raw = termIn.value;
+    termIn.value = '';
+    if (raw.trim()) { history.push(raw); }
+    hIdx = history.length;
+    runCommand(raw);
+  });
+  termIn.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (hIdx > 0) { hIdx--; termIn.value = history[hIdx]; }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (hIdx < history.length - 1) { hIdx++; termIn.value = history[hIdx]; }
+      else { hIdx = history.length; termIn.value = ''; }
+    } else if (e.key === 'Tab') {
+      var v = termIn.value.toLowerCase().replace(/^\s+/, '');
+      if (!v) return;
+      var m = COMMANDS.filter(function (c) { return c.name.indexOf(v) === 0; });
+      if (m.length === 1) { e.preventDefault(); termIn.value = m[0].name; }
+    }
+  });
+  $$('#termCmds button').forEach(function (b) {
+    b.addEventListener('click', function () { runCommand(b.getAttribute('data-cmd')); });
+  });
+  printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
+  echo('show about');
+  COMMANDS[0].run();
+
+  /* ---------- contact form ---------- */
+  var form = $('#contactForm'), fb = $('#formFb'), sendBtn = $('#sendBtn'), copyMsg = $('#copyMsg');
+  var fName = $('#cf-name'), fEmail = $('#cf-email'), fMsg = $('#cf-message');
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function err(id, msg) { $('#err-' + id).textContent = msg || ''; }
+  function messageText() {
+    return 'From: ' + fName.value.trim() + ' <' + fEmail.value.trim() + '>\n\n' + fMsg.value.trim();
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    err('name'); err('email'); err('message'); fb.textContent = ''; copyMsg.hidden = true;
+    if (!fName.value.trim()) { err('name', 'Enter your name.'); ok = false; }
+    if (!EMAIL_RE.test(fEmail.value.trim())) { err('email', 'Enter an email address I can reply to.'); ok = false; }
+    if (fMsg.value.trim().length < 10) { err('message', 'Write at least a sentence.'); ok = false; }
+    if (!ok) { (!fName.value.trim() ? fName : (!EMAIL_RE.test(fEmail.value.trim()) ? fEmail : fMsg)).focus(); return; }
+
+    var noSend = function () {
+      fb.textContent = 'This page could not send your message. Copy it and send it another way.';
+      copyMsg.hidden = false;
+    };
+    if (!db && FORM_ENDPOINT) {
+      sendBtn.disabled = true; fb.textContent = 'Sending…';
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name: fName.value.trim(), email: fEmail.value.trim(), message: fMsg.value.trim() })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('send failed');
+        fb.textContent = 'Message sent. Thank you, I will reply by email.';
+        form.reset();
+      }).catch(function () { noSend(); }).then(function () { sendBtn.disabled = false; });
+      return;
+    }
+    if (!db && CONTACT_EMAIL) {
+      location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('Hello Ashar') + '&body=' + encodeURIComponent(messageText());
+      fb.textContent = 'Opening your email app. If nothing opens, copy the message instead.';
+      copyMsg.hidden = false;
+      return;
+    }
+    if (!db) { noSend(); return; }
+    sendBtn.disabled = true; fb.textContent = 'Sending…';
+    db.collection('messages').add({
+      name: fName.value.trim(), email: fEmail.value.trim(), message: fMsg.value.trim(), sentAt: new Date().toISOString()
+    }).then(function () {
+      fb.textContent = 'Message sent. Thank you, I will reply by email.';
+      form.reset();
+    }).catch(function () {
+      noSend();
+    }).then(function () { sendBtn.disabled = false; });
+  });
+  copyMsg.addEventListener('click', function () {
+    copyText(messageText(), function () {
+      fMsg.focus(); fMsg.select();
+      toast('Copy is blocked here. The message text is selected so you can copy it.');
+    });
+  });
+})();
+</script>
