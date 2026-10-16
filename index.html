@@ -1,13 +1,10 @@
-<!doctype html>
-<html lang="en">
-<head>
 <meta charset="utf-8">
 <title>Ashar Portfolio</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Ashar, Gold Coast. Networking and cloud student on the TAFE Diploma of IT, CCNA coursework complete, aiming for a junior network engineer role. Projects, labs and resume.">
+<meta name="description" content="Ashar, Gold Coast. Cisco CCNA and TAFE Diploma of IT student aiming for a junior network engineer role. Projects, labs and resume.">
 <meta property="og:title" content="Ashar Portfolio">
-<meta property="og:description" content="Networking and cloud student on the Gold Coast, CCNA coursework complete. Labs, projects and resume.">
+<meta property="og:description" content="Cisco CCNA, networking and cloud student on the Gold Coast. Labs, projects and resume.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ashar-networks.github.io/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -335,10 +332,15 @@ button.hop-row:hover { background: var(--raise); }
 /* contact */
 .contact { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 form { display: grid; gap: 16px; }
-.emailcard .mail { display: block; margin-top: 10px; font: 400 clamp(1.5rem, 4.2vw, 2.1rem)/1.15 var(--f-display); color: var(--fg); text-decoration: none; overflow-wrap: anywhere; }
-.emailcard .mail:hover { color: var(--cyan); }
-.emailcard .sm { margin-top: 12px; color: var(--muted); font-size: 15px; max-width: 46ch; }
-.emailcard .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-family: var(--f-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.field input, .field textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line); background: rgba(var(--ink-rgb), 0.04); color: var(--fg); font: 400 16px/1.5 var(--f-body); transition: border-color .2s, box-shadow .2s; }
+.field textarea { min-height: 140px; resize: vertical; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(var(--cyan-rgb), 0.18); }
+.field input::placeholder, .field textarea::placeholder { color: var(--placeholder); }
+.field .err { min-height: 1em; font-size: 13px; color: var(--err); }
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.fb { font-size: 14px; color: var(--fg-2); min-height: 1.4em; }
 .side { display: grid; gap: 16px; }
 .side h3 { font-size: 1.5rem; }
 .side p { color: var(--muted); margin-top: 8px; font-size: 15px; }
@@ -346,6 +348,8 @@ form { display: grid; gap: 16px; }
 details.txt { margin-top: 16px; }
 details.txt summary { cursor: pointer; font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; color: var(--indigo); }
 details.txt pre { margin: 12px 0 0; max-height: 260px; overflow: auto; padding: 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--box); font: 12px/1.6 var(--f-mono); color: var(--fg-2); white-space: pre-wrap; user-select: text; }
+.direct { display: none; margin-top: 14px; align-items: center; gap: 10px; flex-wrap: wrap; font-family: var(--f-mono); font-size: 13px; }
+.direct.show { display: flex; }
 
 /* light / dark switch */
 .theme { order: 2; position: relative; flex: none; display: inline-flex; align-items: center; justify-content: space-between; width: 62px; height: 34px; padding: 0 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--raise); cursor: pointer; transition: border-color .2s, background .2s; }
@@ -376,8 +380,6 @@ details.txt pre { margin: 12px 0 0; max-height: 260px; overflow: auto; padding: 
 
 .prsheet { z-index: 65; padding: calc(20px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
 .prsheet:not([hidden]) { display: flex; }
-.prsheet[data-kind="dl"] .only-print { display: none; }
-.prsheet[data-kind="dl"] #prDl { color: #fff; background: var(--indigo-btn); border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 28px -6px var(--glow); }
 .pr-card { width: min(100%, 640px); margin: auto; padding: clamp(20px, 4vw, 28px); border: 1px solid var(--line-hi); border-radius: 14px; background: var(--surface-solid); box-shadow: 0 30px 80px -30px rgba(var(--shade-rgb), .9); display: grid; gap: 14px; }
 .pr-card h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2rem); line-height: 1.15; }
 .pr-card p.sm { color: var(--muted); font-size: 15px; }
@@ -459,8 +461,6 @@ footer a:hover { color: var(--cyan); }
   .rv { opacity: 1; transform: none; }
 }
 </style>
-</head>
-<body>
 
 <canvas id="bg" aria-hidden="true"></canvas>
 
@@ -497,7 +497,7 @@ footer a:hover { color: var(--cyan); }
           <div>
             <p class="eyebrow">Ashar · Gold Coast, Queensland</p>
             <h1>I build networks, then <em>troubleshoot them</em> until they work.</h1>
-            <p class="lead">Networking and cloud engineering student who has completed the Cisco CCNA coursework, with two years of hands-on customer advisory experience in Officeworks' technology department. Seeking a junior network engineer role where I can build, configure and troubleshoot real networks.</p>
+            <p class="lead">Networking and cloud engineering student with a passed Cisco CCNA and two years advising customers on networking at Officeworks. Looking for a junior network engineer role.</p>
             <div class="stack" aria-label="Tech stack">
               <span class="label"><i></i>In the lab</span>
               <span class="badge">Cisco IOS</span>
@@ -570,7 +570,7 @@ footer a:hover { color: var(--cyan); }
             <dl class="facts">
               <div><dt>Based</dt><dd>Gold Coast, Queensland</dd></div>
               <div><dt>Studying</dt><dd>TAFE · ICT50220</dd></div>
-              <div><dt>Training</dt><dd>CCNA coursework complete</dd></div>
+              <div><dt>Certified</dt><dd>Cisco CCNA</dd></div>
               <div><dt>Working</dt><dd>Officeworks · 2 years</dd></div>
             </dl>
           </div>
@@ -602,13 +602,7 @@ footer a:hover { color: var(--cyan); }
                 <span class="chip" data-l="7">DHCP</span>
                 <span class="chip" data-l="7">DNS</span>
                 <span class="chip" data-l="7">Active Directory</span>
-                <span class="chip" data-l="7">NTP, Syslog and SNMP</span>
-                <span class="chip" data-l="5,6,7">SSH remote management</span>
-                <span class="chip" data-l="6">VPN and encryption concepts</span>
-                <span class="chip" data-l="6">JSON data formats</span>
-                <span class="chip" data-l="5,7">Kerberos troubleshooting</span>
-                <span class="chip" data-l="5,7">AAA, RADIUS and TACACS+</span>
-                <span class="chip" data-l="4">TCP and UDP</span>
+                <span class="chip" data-l="7">Kerberos troubleshooting</span>
                 <span class="chip" data-l="3,4">ACLs</span>
                 <span class="chip" data-l="3,4">NAT</span>
                 <span class="chip" data-l="3">OSPF</span>
@@ -616,14 +610,10 @@ footer a:hover { color: var(--cyan); }
                 <span class="chip" data-l="3">Inter-VLAN routing</span>
                 <span class="chip" data-l="3">IPv4 and IPv6</span>
                 <span class="chip" data-l="3">VLSM subnetting</span>
-                <span class="chip" data-l="3">HSRP and first-hop redundancy</span>
-                <span class="chip" data-l="3">ICMP and traceroute</span>
                 <span class="chip" data-l="2">VLANs and trunking</span>
                 <span class="chip" data-l="2">STP</span>
                 <span class="chip" data-l="2">EtherChannel</span>
                 <span class="chip" data-l="2">Port security</span>
-                <span class="chip" data-l="2">DHCP snooping</span>
-                <span class="chip" data-l="2">CDP and LLDP</span>
                 <span class="chip" data-l="1,2">Wi-Fi networking</span>
               </div>
             </div>
@@ -637,7 +627,7 @@ footer a:hover { color: var(--cyan); }
                 <span class="chip" data-l="T">Ubuntu Linux</span>
                 <span class="chip" data-l="T">journalctl log reading</span>
                 <span class="chip" data-l="T">Config auditing</span>
-                <span class="chip" data-l="6,T">Encrypted cloud backup</span>
+                <span class="chip" data-l="T">Encrypted cloud backup</span>
                 <span class="chip" data-l="T">Network segmentation</span>
                 <span class="chip" data-l="T">Customer troubleshooting</span>
                 <span class="chip" data-l="T">Solution recommendations</span>
@@ -804,9 +794,9 @@ footer a:hover { color: var(--cyan); }
             <thead><tr><th scope="col">Credential</th><th scope="col">Detail</th><th scope="col">Status</th></tr></thead>
             <tbody>
               <tr>
-                <td class="nm">Cisco CCNA coursework</td>
-                <td class="dt" data-label="Detail">Online coursework complete: routing, switching and network services, including OSPF, STP, EtherChannel, ACLs, NAT, DHCP and DNS. Exam not yet taken.</td>
-                <td data-label="Status"><span class="st doing"><i></i>Exam pending</span></td>
+                <td class="nm">Cisco CCNA</td>
+                <td class="dt" data-label="Detail">Routing, switching and network services: OSPF, STP, EtherChannel, ACLs, NAT, DHCP and DNS.</td>
+                <td data-label="Status"><span class="st pass"><i></i>Passed</span></td>
               </tr>
               <tr>
                 <td class="nm">Diploma of Information Technology</td>
@@ -831,15 +821,29 @@ footer a:hover { color: var(--cyan); }
           <h2 class="t">Hiring for a junior network role? <em>Say hello</em>.</h2>
         </div>
         <div class="contact">
-          <div class="card rv emailcard">
-            <p class="kicker">Email</p>
-            <a class="mail" id="mailLink" href="mailto:asharsmth@gmail.com?subject=Hello%20Ashar">asharsmth@gmail.com</a>
-            <p class="sm">The best way to reach me. Tell me about the role or the project and I will reply by email.</p>
-            <div class="btns">
-              <a class="btn primary magnet" href="mailto:asharsmth@gmail.com?subject=Hello%20Ashar" data-magnet="5">Send an email</a>
-              <button class="btn" id="copyMail" type="button">Copy address</button>
-              <a class="btn" href="https://github.com/Ashar-Networks" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </div>
+          <div class="card rv">
+            <form id="contactForm" novalidate>
+              <div class="field">
+                <label for="cf-name">Your name</label>
+                <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="120" placeholder="Alex Morgan" required>
+                <span class="err" id="err-name" aria-live="polite"></span>
+              </div>
+              <div class="field">
+                <label for="cf-email">Your email</label>
+                <input id="cf-email" name="email" type="email" autocomplete="email" maxlength="200" placeholder="alex@company.com" required>
+                <span class="err" id="err-email" aria-live="polite"></span>
+              </div>
+              <div class="field">
+                <label for="cf-message">Message</label>
+                <textarea id="cf-message" name="message" maxlength="2000" placeholder="Tell me about the role or the project." required></textarea>
+                <span class="err" id="err-message" aria-live="polite"></span>
+              </div>
+              <div class="form-actions">
+                <button class="btn primary magnet" id="sendBtn" type="submit" data-magnet="5">Send message</button>
+                <button class="btn" id="copyMsg" type="button" hidden>Copy message</button>
+                <span class="fb" id="formFb" role="status" aria-live="polite"></span>
+              </div>
+            </form>
           </div>
 
           <div class="side rv" style="--d:.08s">
@@ -847,7 +851,7 @@ footer a:hover { color: var(--cyan); }
               <h3>Resume</h3>
               <p class="sm">One page, A4. Select it to read it full size. Print offers an ink-friendly version.</p>
               <button class="thumb js-view" type="button" aria-label="View my resume full size">
-                <img src="resume-page.png" width="1654" height="2339" loading="lazy" alt="Page one of Ashar's resume: summary, CCNA coursework, Diploma of Information Technology at TAFE, skills, three projects and two years at Officeworks.">
+                <img src="resume-page.png" width="1654" height="2339" loading="lazy" alt="Page one of Ashar's resume: summary, Cisco CCNA, Diploma of Information Technology at TAFE, skills, three projects and two years at Officeworks.">
                 <span class="zoom">View full size</span>
               </button>
               <div class="btns">
@@ -855,6 +859,7 @@ footer a:hover { color: var(--cyan); }
                 <button class="btn js-print" type="button">Print</button>
                 <button class="btn js-view" type="button">View full size</button>
               </div>
+              <div class="direct" id="direct"><span id="directAddr"></span><button class="btn sm" id="copyAddr" type="button">Copy address</button></div>
             </div>
           </div>
         </div>
@@ -865,7 +870,7 @@ footer a:hover { color: var(--cyan); }
   <footer>
     <div class="in">
       <span>Ashar · Gold Coast, Queensland</span>
-      <span>Diploma of IT · ICT50220 · CRICOS 107313E</span>
+      <span>Cisco CCNA · ICT50220 · CRICOS 107313E</span>
       <a href="https://github.com/Ashar-Networks" target="_blank" rel="noopener noreferrer">github.com/Ashar-Networks</a>
       <a href="#top">Back to top</a>
     </div>
@@ -883,27 +888,27 @@ footer a:hover { color: var(--cyan); }
     </div>
   </div>
   <div class="lb-page">
-    <img src="resume-page.png" width="1654" height="2339" alt="Ashar's resume, page one: summary, education and training, skills, projects and experience.">
+    <img src="resume-page.png" width="1654" height="2339" alt="Ashar's resume, page one: summary, certification and education, skills, projects and experience.">
     <p>The PDF has a link to my website at the top and bottom.</p>
   </div>
 </div>
 
 <div class="lb prsheet" id="pr" role="dialog" aria-modal="true" aria-labelledby="prTitle" hidden>
   <div class="pr-card">
-    <p class="kicker" id="prKicker">Print resume</p>
+    <p class="kicker">Print resume</p>
     <h3 id="prTitle">Print an ink-friendly version?</h3>
-    <p class="sm" id="prText">The ink-friendly version has a white background and dark text, so it uses very little ink. The other keeps the dark look of this site.</p>
+    <p class="sm">The ink-friendly version has a white background and dark text, so it uses very little ink. The other keeps the dark look of this site.</p>
     <fieldset class="pr-opts">
       <legend class="kicker" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Resume version</legend>
-      <label class="opt"><input type="radio" name="ver" value="light" checked><span class="oc"><img src="resume-page-light.png" width="1654" height="2339" loading="lazy" alt="Ink-friendly resume with a white background"><span class="ot" id="otLight">Yes, ink-friendly</span><span class="od">White background</span></span></label>
-      <label class="opt"><input type="radio" name="ver" value="dark"><span class="oc"><img src="resume-page.png" width="1654" height="2339" loading="lazy" alt="Dark resume matching this site"><span class="ot" id="otDark">No, keep it dark</span><span class="od">Matches this site</span></span></label>
+      <label class="opt"><input type="radio" name="ver" value="light" checked><span class="oc"><img src="resume-page-light.png" width="1654" height="2339" loading="lazy" alt="Ink-friendly resume with a white background"><span class="ot">Yes, ink-friendly</span><span class="od">White background</span></span></label>
+      <label class="opt"><input type="radio" name="ver" value="dark"><span class="oc"><img src="resume-page.png" width="1654" height="2339" loading="lazy" alt="Dark resume matching this site"><span class="ot">No, keep it dark</span><span class="od">Matches this site</span></span></label>
     </fieldset>
     <div class="ctl">
-      <a class="btn primary only-print" id="prOpen" href="Ashar-Resume-Ink-Friendly.pdf" target="_blank" rel="noopener">Open PDF to print</a>
+      <a class="btn primary" id="prOpen" href="Ashar-Resume-Ink-Friendly.pdf" target="_blank" rel="noopener">Open PDF to print</a>
       <button class="btn" id="prDl" type="button">Download PDF</button>
       <button class="btn" id="prClose" type="button">Cancel</button>
     </div>
-    <p class="hintline only-print">This page cannot open your print dialog. Open the PDF, then choose Print in your PDF viewer.</p>
+    <p class="hintline">This page cannot open your print dialog. Open the PDF, then choose Print in your PDF viewer.</p>
   </div>
 </div>
 
@@ -917,8 +922,14 @@ footer a:hover { color: var(--cyan); }
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
+  /* Set this to a public address to show it beside the resume buttons. */
+  var PUBLIC_EMAIL = '';
+  /* Settings for hosting off Claude (GitHub Pages).
+     FORM_ENDPOINT: a Formspree address such as https://formspree.io/f/xxxxxxxx (free, forwards messages to your inbox).
+     CONTACT_EMAIL: used when there is no endpoint, so the form opens the visitor's email app instead. */
   var GITHUB_URL = 'https://github.com/Ashar-Networks';
-  var EMAIL = 'asharsmth@gmail.com';
+  var FORM_ENDPOINT = '';
+  var CONTACT_EMAIL = '';
 
   /* ---------- toast ---------- */
   var toastEl = $('#toast'), toastTimer = 0;
@@ -1353,9 +1364,10 @@ footer a:hover { color: var(--cyan); }
   }
 
   /* ---------- capabilities (null when this view cannot run them) ---------- */
-  var downloads = null;
+  var downloads = null, db = null;
   if (window.claude && typeof window.claude.use === 'function') {
     window.claude.use('downloads').then(function (d) { downloads = d; }).catch(function () {});
+    window.claude.use('db').then(function (d) { db = d; }).catch(function () {});
   }
 
   function copyText(text, fallback) {
@@ -1385,20 +1397,10 @@ footer a:hover { color: var(--cyan); }
     if (opener && opener.focus) opener.focus();
   }
   function openViewer(from) { openModal(lb, from, $('#lbClose')); }
-  function openPrint(from, kind) {
-    kind = kind === 'dl' ? 'dl' : 'print';
-    pr.setAttribute('data-kind', kind);
-    var dl = kind === 'dl';
-    $('#prKicker').textContent = dl ? 'Download resume' : 'Print resume';
-    $('#prTitle').textContent = dl ? 'Which version do you want?' : 'Print an ink-friendly version?';
-    $('#prText').textContent = dl
-      ? 'Both are the same one-page resume. The dark version matches this site. The light version has a white background and uses very little ink if you print it.'
-      : 'The ink-friendly version has a white background and dark text, so it uses very little ink. The other keeps the dark look of this site.';
-    $('#otLight').textContent = dl ? 'Light, ink-friendly' : 'Yes, ink-friendly';
-    $('#otDark').textContent = dl ? 'Dark, matches this site' : 'No, keep it dark';
-    var def = $('input[name="ver"][value="' + (dl ? currentMode() : 'light') + '"]');
+  function openPrint(from) {
+    var def = $('input[name="ver"][value="light"]');
     if (def) { def.checked = true; syncPrint(); }
-    openModal(pr, from, dl ? $('#prDl') : $('#prOpen'));
+    openModal(pr, from, $('#prOpen'));
   }
   $$('.js-view').forEach(function (b) { b.addEventListener('click', function () { openViewer(b); }); });
   $$('.js-print').forEach(function (b) { b.addEventListener('click', function () { openPrint(b); }); });
@@ -1452,8 +1454,8 @@ footer a:hover { color: var(--cyan); }
       fallback('The PDF could not be saved. Use Open PDF instead.');
     });
   }
-  $$('.js-resume').forEach(function (btn) { btn.addEventListener('click', function () { openPrint(btn, 'dl'); }); });
-  $('#prDl').addEventListener('click', function () { var f = PDFS[chosenVersion()]; closeModal(pr); doResume(f); });
+  $$('.js-resume').forEach(function (btn) { btn.addEventListener('click', function () { doResume(); }); });
+  $('#prDl').addEventListener('click', function () { doResume(PDFS[chosenVersion()]); });
 
   /* ---------- light / dark switch (dark is the default) ---------- */
   var root = document.documentElement, themeBtn = $('#themeBtn');
@@ -1471,9 +1473,13 @@ footer a:hover { color: var(--cyan); }
   }
   themeBtn.addEventListener('click', function () { applyMode(currentMode() === 'light' ? 'dark' : 'light', true); });
   applyMode(currentMode(), false);
-  $('#copyMail').addEventListener('click', function () {
-    copyText(EMAIL, function () { toast('Copy is blocked here. Select the address instead.'); });
-  });
+  if (PUBLIC_EMAIL) {
+    $('#directAddr').textContent = PUBLIC_EMAIL;
+    $('#direct').classList.add('show');
+    $('#copyAddr').addEventListener('click', function () {
+      copyText(PUBLIC_EMAIL, function () { toast('Copy is blocked here. Select the address instead.'); });
+    });
+  }
 
   /* ---------- hero console ---------- */
   var termOut = $('#termOut'), termIn = $('#termIn'), history = [], hIdx = 0;
@@ -1497,15 +1503,14 @@ footer a:hover { color: var(--cyan); }
   var COMMANDS = [
     { name: 'show about', help: 'who I am', run: function () { printLines([
       'Ashar · Gold Coast, Queensland',
-      'Networking and cloud engineering student. Cisco CCNA coursework complete.',
+      'Networking and cloud engineering student. Passed Cisco CCNA.',
       'Two years in the technology department at Officeworks.',
       'Studying the Diploma of Information Technology until July 2027.',
       'Looking for a junior network engineer role.'
     ]); } },
     { name: 'show skills', help: 'what I work with', run: function () { printLines([
       'Routing and switching: Cisco IOS CLI, VLANs and trunking, inter-VLAN routing, static routing, OSPF, STP, EtherChannel, VLSM subnetting, IPv4 and IPv6',
-      'Services and security: DHCP, DNS, NAT, ACLs, port security, DHCP snooping, SSH, AAA, VPN concepts, Wi-Fi networking, config auditing',
-      'Protocols and management: TCP and UDP, ICMP and traceroute, HSRP, CDP and LLDP, NTP, Syslog and SNMP, JSON data formats',
+      'Services and security: DHCP, DNS, NAT, ACLs, port security, Wi-Fi networking, config auditing',
       'Servers and virtualisation: Windows Server, Active Directory, Hyper-V, Ubuntu Linux, Kerberos troubleshooting, journalctl log reading',
       'Tools and planning: Cisco Packet Tracer, network segmentation, customer troubleshooting, project planning'
     ]); } },
@@ -1522,7 +1527,7 @@ footer a:hover { color: var(--cyan); }
       '- Troubleshot issues from simple faults to complex ones'
     ]); } },
     { name: 'show education', help: 'study and certification', run: function () { printLines([
-      'Cisco CCNA coursework ... complete, exam not yet taken',
+      'Cisco CCNA ............ passed',
       'Diploma of IT (Advanced Networking and Cloud Engineering), TAFE ... in progress, Jul 2026 to Jul 2027',
       'Bachelor of IT (Networks and Cyber Security), Griffith University ... planned'
     ]); } },
@@ -1536,15 +1541,15 @@ footer a:hover { color: var(--cyan); }
     { name: 'ping ashar', help: 'check I am reachable', run: function () { printLines([
       'Sending 5, 100-byte ICMP Echos to ashar, timeout is 2 seconds:',
       '!!!!!',
-      'Success rate is 100 percent (5/5). Email me to say hello.'
+      'Success rate is 100 percent (5/5). Use the contact form to say hello.'
     ], 'ok'); } },
     { name: 'github', help: 'open my GitHub', run: function () {
       printLines(['Opening ' + GITHUB_URL.replace('https://', '') + ' in a new tab...']);
       window.open(GITHUB_URL, '_blank', 'noopener');
     } },
-    { name: 'resume', help: 'download my resume', run: function () { printLines(['Choose light or dark in the window that opens...']); openPrint(termIn, 'dl'); } },
-    { name: 'contact', help: 'jump to my email address', run: function () {
-      printLines(['Opening the contact section...']);
+    { name: 'resume', help: 'download my resume', run: function () { printLines(['Starting resume download...']); doResume(); } },
+    { name: 'contact', help: 'jump to the contact form', run: function () {
+      printLines(['Opening the contact form...']);
       $('#contact').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     } },
     { name: 'clear', help: 'clear the screen', run: function () { termOut.innerHTML = ''; } },
@@ -1608,8 +1613,63 @@ footer a:hover { color: var(--cyan); }
   printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
   echo('show about');
   COMMANDS[0].run();
+
+  /* ---------- contact form ---------- */
+  var form = $('#contactForm'), fb = $('#formFb'), sendBtn = $('#sendBtn'), copyMsg = $('#copyMsg');
+  var fName = $('#cf-name'), fEmail = $('#cf-email'), fMsg = $('#cf-message');
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function err(id, msg) { $('#err-' + id).textContent = msg || ''; }
+  function messageText() {
+    return 'From: ' + fName.value.trim() + ' <' + fEmail.value.trim() + '>\n\n' + fMsg.value.trim();
+  }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var ok = true;
+    err('name'); err('email'); err('message'); fb.textContent = ''; copyMsg.hidden = true;
+    if (!fName.value.trim()) { err('name', 'Enter your name.'); ok = false; }
+    if (!EMAIL_RE.test(fEmail.value.trim())) { err('email', 'Enter an email address I can reply to.'); ok = false; }
+    if (fMsg.value.trim().length < 10) { err('message', 'Write at least a sentence.'); ok = false; }
+    if (!ok) { (!fName.value.trim() ? fName : (!EMAIL_RE.test(fEmail.value.trim()) ? fEmail : fMsg)).focus(); return; }
+
+    var noSend = function () {
+      fb.textContent = 'This page could not send your message. Copy it and send it another way.';
+      copyMsg.hidden = false;
+    };
+    if (!db && FORM_ENDPOINT) {
+      sendBtn.disabled = true; fb.textContent = 'Sending…';
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name: fName.value.trim(), email: fEmail.value.trim(), message: fMsg.value.trim() })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('send failed');
+        fb.textContent = 'Message sent. Thank you, I will reply by email.';
+        form.reset();
+      }).catch(function () { noSend(); }).then(function () { sendBtn.disabled = false; });
+      return;
+    }
+    if (!db && CONTACT_EMAIL) {
+      location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('Hello Ashar') + '&body=' + encodeURIComponent(messageText());
+      fb.textContent = 'Opening your email app. If nothing opens, copy the message instead.';
+      copyMsg.hidden = false;
+      return;
+    }
+    if (!db) { noSend(); return; }
+    sendBtn.disabled = true; fb.textContent = 'Sending…';
+    db.collection('messages').add({
+      name: fName.value.trim(), email: fEmail.value.trim(), message: fMsg.value.trim(), sentAt: new Date().toISOString()
+    }).then(function () {
+      fb.textContent = 'Message sent. Thank you, I will reply by email.';
+      form.reset();
+    }).catch(function () {
+      noSend();
+    }).then(function () { sendBtn.disabled = false; });
+  });
+  copyMsg.addEventListener('click', function () {
+    copyText(messageText(), function () {
+      fMsg.focus(); fMsg.select();
+      toast('Copy is blocked here. The message text is selected so you can copy it.');
+    });
+  });
 })();
 </script>
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d04c3636dad1462582f47ab68848e3c4"}'></script><!-- End Cloudflare Web Analytics -->
-</body>
-</html>
