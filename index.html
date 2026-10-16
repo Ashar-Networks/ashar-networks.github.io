@@ -16,6 +16,10 @@
 <meta name="twitter:description" content="Gold Coast. TAFE Diploma of IT, CCNA coursework complete. Labs, projects and resume.">
 <meta name="twitter:image" content="https://ashar-networks.github.io/share-card.png">
 <link rel="canonical" href="https://ashar-networks.github.io/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Ashar">
+<meta property="og:locale" content="en_AU">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://ashar-networks.github.io/#site","url":"https://ashar-networks.github.io/","name":"Ashar","description":"Portfolio of Ashar, a networking and cloud engineering student on the Gold Coast.","inLanguage":"en-AU","publisher":{"@id":"https://ashar-networks.github.io/#person"}},{"@type":"Person","@id":"https://ashar-networks.github.io/#person","name":"Ashar","url":"https://ashar-networks.github.io/","email":"mailto:AsharNetworks@gmail.com","jobTitle":"Networking and Cloud Engineering Student","description":"Networking and cloud engineering student on the Gold Coast who has completed the Cisco CCNA coursework, seeking a junior network engineer role.","address":{"@type":"PostalAddress","addressLocality":"Gold Coast","addressRegion":"Queensland","addressCountry":"AU"},"sameAs":["https://github.com/Ashar-Networks"],"knowsAbout":["Cisco IOS","VLANs","OSPF","Spanning Tree Protocol","EtherChannel","Access control lists","NAT","DHCP","DNS","Windows Server","Active Directory","Hyper-V","Ubuntu","Cisco Packet Tracer"]}]}</script>
 <title>Ashar | Networking and Cloud Engineering Student</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -967,7 +971,7 @@ footer a:hover { color: var(--cyan); }
     };
     recolor = function () { readColors(); if (reduce) draw(); };
     var W = 0, H = 0, dpr = 1, nodes = [], packets = [], link = 150;
-    var ptr = { x: -999, y: -999 }, last = 0, spawnIn = 0, running = false;
+    var ptr = { x: -999, y: -999 }, last = 0, spawnIn = 0, running = false, raf = 0;
 
     var mk = function () {
       var a = Math.random() * 6.283, s = 0.05 + Math.random() * 0.11;
@@ -1062,10 +1066,11 @@ footer a:hover { color: var(--cyan); }
       if (!running) return;
       var dt = Math.min(40, ts - last || 16); last = ts;
       step(dt); draw();
-      requestAnimationFrame(frame);
+      raf = requestAnimationFrame(frame);
     };
-    var start = function () { if (reduce || running) return; running = true; last = 0; requestAnimationFrame(frame); };
-    var stop = function () { running = false; };
+    /* Only one loop may ever run. Hiding the tab cancels the pending frame, so coming back cannot stack a second loop. */
+    var start = function () { if (reduce || running) return; running = true; last = 0; cancelAnimationFrame(raf); raf = requestAnimationFrame(frame); };
+    var stop = function () { running = false; cancelAnimationFrame(raf); };
 
     ripple = function (x, y) {
       if (reduce || !nodes.length) return;
