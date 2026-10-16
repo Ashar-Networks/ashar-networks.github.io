@@ -193,6 +193,7 @@ h1 em, h2 em { font-style: italic; background: linear-gradient(90deg, var(--indi
 .tline.k { color: var(--indigo); }
 .tline.err { color: var(--err); }
 .tline.ok { color: var(--cyan); }
+.tline a { color: var(--cyan); text-decoration: underline; text-underline-offset: 3px; }
 @keyframes lnin { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 .term-cmds { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-top: 1px solid var(--line); }
 .term-cmds button { padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--raise); color: var(--fg-2); font: 400 12px/1.2 var(--f-mono); cursor: pointer; transition: border-color .2s, color .2s; }
@@ -550,12 +551,12 @@ footer a:hover { color: var(--cyan); }
               <button type="button" data-cmd="show projects">show projects</button>
               <button type="button" data-cmd="show experience">show experience</button>
               <button type="button" data-cmd="show education">show education</button>
-              <button type="button" data-cmd="show vlan brief">show vlan brief</button>
+              <button type="button" data-cmd="show roadmap">show roadmap</button>
               <button type="button" data-cmd="ping ashar">ping ashar</button>
               <button type="button" data-cmd="?">?</button>
             </div>
             <form class="term-in" id="termForm" autocomplete="off">
-              <label for="termIn">ashar#</label>
+              <label for="termIn" id="termLab">ashar#</label>
               <input id="termIn" type="text" spellcheck="false" autocapitalize="none" autocorrect="off" autocomplete="off" placeholder="type ? for commands" aria-label="Type a command, or ? for help">
             </form>
           </div>
@@ -1500,7 +1501,12 @@ footer a:hover { color: var(--cyan); }
   });
 
   /* ---------- hero console ---------- */
-  var termOut = $('#termOut'), termIn = $('#termIn'), history = [], hIdx = 0;
+  var termOut = $('#termOut'), termIn = $('#termIn'), termLab = $('#termLab');
+  var history = [], hIdx = 0, pending = null, booting = false, timers = [];
+  var HOST = 'ashar', MODE = 'priv';   /* MODE: user (ashar>), priv (ashar#), cfg (ashar(config)#) */
+
+  function promptText() { return HOST + (MODE === 'user' ? '>' : MODE === 'cfg' ? '(config)#' : '#'); }
+  function setMode(m) { MODE = m; termLab.textContent = promptText(); }
   function printLines(lines, cls) {
     lines.forEach(function (t, i) {
       var d = document.createElement('div');
@@ -1511,105 +1517,393 @@ footer a:hover { color: var(--cyan); }
     });
     termOut.scrollTop = termOut.scrollHeight;
   }
-  function echo(raw) {
+  function echo(raw, plain) {
     var d = document.createElement('div');
     d.className = 'tline cmd';
-    var p = document.createElement('span'); p.className = 'p'; p.textContent = 'ashar# ';
-    d.appendChild(p); d.appendChild(document.createTextNode(raw));
+    if (!plain) {
+      var p = document.createElement('span'); p.className = 'p'; p.textContent = promptText() + ' ';
+      d.appendChild(p);
+    }
+    d.appendChild(document.createTextNode(raw));
     termOut.appendChild(d);
   }
+  /* run steps one after another; with reduced motion they all run at once */
+  function seq(steps) {
+    var t = 0;
+    steps.forEach(function (s) {
+      t += s[0];
+      if (reduce) { s[1](); return; }
+      timers.push(setTimeout(s[1], t));
+    });
+  }
+  function cancelTimers() { timers.forEach(clearTimeout); timers = []; abortPing(false); }
+
+  /* ----- ping: real timed requests to this site, then a contact line ----- */
+  var pingTok = 0, pingBusy = false;
+  function abortPing(say) {
+    if (!pingBusy) return;
+    pingTok++; pingBusy = false;
+    if (say) printLines(['% Ping aborted.'], 'k');
+  }
+  function probeOnce() {
+    if (typeof fetch !== 'function') return Promise.resolve(-1);
+    var t0 = performance.now();
+    var url = location.href.split('#')[0].split('?')[0] + '?ping=' + Date.now() + Math.random().toString(36).slice(2, 6);
+    var req;
+    try { req = fetch(url, { method: 'HEAD', cache: 'no-store' }); } catch (e) { return Promise.resolve(-1); }
+    var got = req.then(function () { return Math.max(1, Math.round(performance.now() - t0)); }, function () { return -1; });
+    var late = new Promise(function (res) { setTimeout(function () { res(-1); }, 2000); });
+    return Promise.race([got, late]);
+  }
+  function printMail(before) {
+    var d = document.createElement('div');
+    d.className = 'tline';
+    d.appendChild(document.createTextNode(before));
+    var a = document.createElement('a');
+    a.href = 'mailto:' + EMAIL; a.textContent = EMAIL;
+    d.appendChild(a);
+    termOut.appendChild(d);
+    termOut.scrollTop = termOut.scrollHeight;
+  }
+  function pingOutro(ok, avg) {
+    if (!ok) {
+      printLines(['Nothing came back. Either your connection dropped, or this copy of the page is running offline.'], 'k');
+      printMail('Email still finds a way: ');
+      return;
+    }
+    printLines(['Reply received. Ashar is reachable and open to junior network engineer roles.'], 'ok');
+    if (ok === 5) {
+      var feel = avg < 60 ? 'Clean path.' : avg < 200 ? 'Healthy path.' : 'Long way round, but it held.';
+      printLines([avg + ' ms from you to my site. ' + feel + ' From you to my inbox: one email.'], 'k');
+    } else {
+      printLines([(5 - ok) + ' of 5 probes were lost on the way, exactly the kind of problem I want to troubleshoot professionally.'], 'k');
+    }
+    printMail('Send one: ');
+  }
+  function pingSite() {
+    var site = location.hostname || 'ashar-networks.github.io';
+    abortPing(false);
+    pingBusy = true;
+    var tok = ++pingTok, times = [], n = 0;
+    printLines(['Type escape sequence to abort.',
+                'Sending 5 HTTP HEAD probes to ' + site + ' (a browser cannot send raw ICMP), timeout is 2 seconds:']);
+    var bar = document.createElement('div');
+    bar.className = 'tline';
+    termOut.appendChild(bar);
+    function finish() {
+      pingBusy = false;
+      var ok = times.length, sum = 0, mn = Infinity, mx = 0;
+      times.forEach(function (t) { sum += t; if (t < mn) mn = t; if (t > mx) mx = t; });
+      var avg = ok ? Math.round(sum / ok) : 0;
+      var line = 'Success rate is ' + Math.round(ok * 20) + ' percent (' + ok + '/5)';
+      if (ok) line += ', round-trip min/avg/max = ' + mn + '/' + avg + '/' + mx + ' ms';
+      printLines([line], ok ? 'ok' : 'err');
+      seq([[700, function () { pingOutro(ok, avg); }]]);
+    }
+    (function next() {
+      if (tok !== pingTok) return;
+      if (n === 5) { finish(); return; }
+      var start = performance.now();
+      probeOnce().then(function (ms) {
+        if (tok !== pingTok) return;
+        bar.textContent += ms > 0 ? '!' : '.';
+        if (ms > 0) times.push(ms);
+        n++;
+        termOut.scrollTop = termOut.scrollHeight;
+        var wait = reduce ? 0 : Math.max(0, 260 - (performance.now() - start));
+        timers.push(setTimeout(next, wait));
+      });
+    })();
+  }
+  /* pinging yourself: a joke, and labelled as one */
+  function pingLoopback(target) {
+    printLines(['Type escape sequence to abort.', 'Sending 5, 100-byte ICMP Echos to ' + target + ', timeout is 2 seconds:']);
+    var bar = document.createElement('div');
+    bar.className = 'tline';
+    termOut.appendChild(bar);
+    var steps = [];
+    for (var i = 0; i < 5; i++) steps.push([i ? 160 : 250, function () { bar.textContent += '!'; }]);
+    steps.push([300, function () {
+      printLines(['Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms'], 'ok');
+      printLines(['That is just you pinging yourself. Try: ping ashar'], 'k');
+    }]);
+    seq(steps);
+  }
+  function pingCmd(args) {
+    if (!args.length) { printLines(['% Incomplete command. Try: ping ashar'], 'err'); return; }
+    var t = args[0].toLowerCase();
+    if (t === 'ashar' || t === 'ashar-networks.github.io') { pingSite(); return; }
+    if (t === '127.0.0.1' || t === 'localhost') { pingLoopback(args[0]); return; }
+    printLines(['% Unrecognized host or address, or protocol not running.', 'Try: ping ashar'], 'err');
+  }
+  function goContact() { $('#contact').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' }); }
+
+  /* ----- subnet calculator ----- */
+  function ip2n(s) {
+    var m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(s);
+    if (!m) return null;
+    var n = 0;
+    for (var i = 1; i <= 4; i++) { var o = +m[i]; if (o > 255) return null; n = n * 256 + o; }
+    return n;
+  }
+  function n2ip(n) { return [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.'); }
+  function maskOf(len) { return len === 0 ? 0 : ((0xFFFFFFFF << (32 - len)) >>> 0); }
+  function usable(net, len) {
+    var size = Math.pow(2, 32 - len), bc = net + size - 1;
+    if (len === 32) return { first: net, last: net, hosts: 1, bc: bc };
+    if (len === 31) return { first: net, last: bc, hosts: 2, bc: bc };
+    return { first: net + 1, last: bc - 1, hosts: size - 2, bc: bc };
+  }
+  var SUBNET_USAGE = 'Usage: subnet <network>/<length> [new-length]   example: subnet 192.168.235.0/24 26';
+  function subnetCalc(args) {
+    if (!args.length) { printLines([SUBNET_USAGE], 'k'); return; }
+    var a = args[0].split('/'), ip = ip2n(a[0]), len = a.length === 2 && /^\d{1,2}$/.test(a[1]) ? +a[1] : -1;
+    if (a.length === 1 && args[1] && /^\/?\d{1,2}$/.test(args[1]) && ip !== null) { len = +args[1].replace('/', ''); args = [args[0] + '/' + len].concat(args.slice(2)); }
+    if (ip === null || len < 0 || len > 32) { printLines(['% Invalid network. ' + SUBNET_USAGE], 'err'); return; }
+    var mask = maskOf(len), net = (ip & mask) >>> 0, out = [];
+    if (net !== ip) out.push('Note: host bits cleared, the network address is ' + n2ip(net) + '/' + len + '.');
+    if (args.length < 2) {
+      var u = usable(net, len);
+      out.push('Network    ' + n2ip(net) + '/' + len,
+               'Mask       ' + n2ip(mask) + '  (wildcard ' + n2ip((~mask) >>> 0) + ')',
+               'Broadcast  ' + n2ip(u.bc),
+               'Usable     ' + n2ip(u.first) + ' - ' + n2ip(u.last),
+               'Hosts      ' + u.hosts);
+      printLines(out, 'ok'); return;
+    }
+    if (!/^\/?\d{1,2}$/.test(args[1])) { printLines(['% Invalid new length. ' + SUBNET_USAGE], 'err'); return; }
+    var nl = +args[1].replace('/', '');
+    if (nl < len || nl > 32) { printLines(['% The new length must be between /' + len + ' and /32.'], 'err'); return; }
+    var count = Math.pow(2, nl - len);
+    if (count > 64) { printLines(['% That makes ' + count + ' subnets. Pick a new length no more than 6 bits longer (up to 64 subnets).'], 'err'); return; }
+    var step = Math.pow(2, 32 - nl), per = usable(0, nl).hosts;
+    out.push(n2ip(net) + '/' + len + ' split into ' + count + ' x /' + nl + ' (' + per + ' usable host' + (per === 1 ? '' : 's') + ' each)');
+    for (var i = 0; i < count; i++) {
+      var sn = net + i * step, uu = usable(sn, nl);
+      var label = (i + 1) + '  ' + n2ip(sn) + '/' + nl;
+      if (nl === 32) out.push(label + '   single host');
+      else if (nl === 31) out.push(label + '   point-to-point, both addresses usable');
+      else out.push(label + '   broadcast ' + n2ip(uu.bc), '   usable ' + n2ip(uu.first) + ' - ' + n2ip(uu.last));
+    }
+    printLines(out, 'ok');
+  }
+
+  /* ----- clock (Queensland has no daylight saving, so it is always UTC+10) ----- */
+  function pad(n, w) { n = String(n); while (n.length < (w || 2)) n = '0' + n; return n; }
+  function showClock() {
+    var d = new Date(Date.now() + 10 * 3600 * 1000);
+    var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    var mons = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    printLines([
+      '*' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + '.' + pad(d.getUTCMilliseconds(), 3) + ' AEST ' + days[d.getUTCDay()] + ' ' + mons[d.getUTCMonth()] + ' ' + d.getUTCDate() + ' ' + d.getUTCFullYear(),
+      'Gold Coast, Queensland (UTC+10, no daylight saving)'
+    ]);
+  }
+
+  /* ----- reload (boot sequence) ----- */
+  function doReload() {
+    cancelTimers();
+    booting = true; termIn.disabled = true;
+    termOut.innerHTML = '';
+    seq([
+      [0,   function () { printLines(['Ashar System Bootstrap, Version 2026.10']); }],
+      [350, function () { printLines(['Loading portfolio image from flash: ################ [OK]']); }],
+      [400, function () { printLines(['Self-decompressing the image ... done']); }],
+      [400, function () { printLines(['%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan10, changed state to up', '%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan20, changed state to up', '%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan90, changed state to up'], 'k'); }],
+      [600, function () {
+        HOST = 'ashar'; setMode('priv'); history = []; hIdx = 0; pending = null;
+        termOut.innerHTML = '';
+        printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
+        echo('show about'); COMMANDS[0].run();
+        booting = false; termIn.disabled = false;
+        if (fine) termIn.focus();
+      }]
+    ]);
+  }
+
+  /*  scope: exec (user + privileged), priv (privileged only), cfg (configuration only), any (every mode)  */
   var COMMANDS = [
-    { name: 'show about', help: 'who I am', run: function () { printLines([
+    { name: 'show about', help: 'who I am', scope: 'exec', run: function () { printLines([
       'Ashar · Gold Coast, Queensland',
       'Networking and cloud engineering student. Cisco CCNA coursework complete.',
       'Two years in the technology department at Officeworks.',
       'Studying the Diploma of Information Technology until July 2027.',
       'Looking for a junior network engineer role.'
     ]); } },
-    { name: 'show skills', help: 'what I work with', run: function () { printLines([
+    { name: 'show skills', help: 'what I work with', scope: 'exec', run: function () { printLines([
       'Routing and switching: Cisco IOS CLI, VLANs and trunking, inter-VLAN routing, static routing, OSPF, STP, EtherChannel, VLSM subnetting, IPv4 and IPv6',
       'Services and security: DHCP, DNS, NAT, ACLs, port security, DHCP snooping, SSH, AAA, VPN concepts, Wi-Fi networking, config auditing',
       'Protocols and management: TCP and UDP, ICMP and traceroute, HSRP, CDP and LLDP, NTP, Syslog and SNMP, JSON data formats',
       'Servers and virtualisation: Windows Server, Active Directory, Hyper-V, Ubuntu Linux, Kerberos troubleshooting, journalctl log reading',
       'Tools and planning: Cisco Packet Tracer, network segmentation, customer troubleshooting, project planning'
     ]); } },
-    { name: 'show projects', help: 'labs and case studies', run: function () { printLines([
+    { name: 'show projects', help: 'labs and case studies', scope: 'exec', run: function () { printLines([
       '1. Campus switching and routing lab (Packet Tracer): 3 access and 2 distribution switches, router-on-a-stick on a Cisco 1841, 192.168.235.0/24 split into four /26 subnets',
       '2. Active Directory home lab (Hyper-V): Windows Server domain with an Ubuntu VM being joined, Kerberos pre-authentication failure traced to a password issue',
       '3. Digital records proposal (TQLD Lawyers): encrypted cloud backup with department-segmented synced folders for 23 staff'
     ]); } },
-    { name: 'show experience', help: 'work history', run: function () { printLines([
+    { name: 'show experience', help: 'work history', scope: 'exec', run: function () { printLines([
       'Officeworks, Technology department. Part-time, 2 years.',
       '- Worked out customer needs and recommended technology by budget, goals and use case',
       '- Advised tens of customers on networking: product type, sizing by devices, office size, budget and NBN plan',
       '- Advised customers on choosing an NBN plan',
       '- Troubleshot issues from simple faults to complex ones'
     ]); } },
-    { name: 'show education', help: 'study and certification', run: function () { printLines([
+    { name: 'show education', help: 'study and certification', scope: 'exec', run: function () { printLines([
       'Cisco CCNA coursework ... complete, exam not yet taken',
       'Diploma of IT (Advanced Networking and Cloud Engineering), TAFE ... in progress, Jul 2026 to Jul 2027',
       'Bachelor of IT (Networks and Cyber Security), Griffith University ... planned'
     ]); } },
-    { name: 'show vlan brief', help: 'VLANs in my campus lab', run: function () { printLines([
+    { name: 'show roadmap', help: 'where I am headed', scope: 'exec', run: function () { printLines([
+      'Roadmap   [x] done   [~] in progress   [ ] planned',
+      '[x] Done    Cisco CCNA coursework',
+      '[ ] Next    Cisco CCNA exam (pending)',
+      '[~] Now     Diploma of IT (Advanced Networking and Cloud Engineering), TAFE, Jul 2026 to Jul 2027',
+      '[ ] After   Bachelor of IT (Networks and Cyber Security), Griffith University',
+      '[ ] Goal    Junior network engineer role'
+    ]); } },
+    { name: 'show clock', help: 'time on the Gold Coast', scope: 'exec', run: showClock },
+    { name: 'show vlan brief', help: 'VLANs in my campus lab', scope: 'exec', run: function () { printLines([
       'Campus switching and routing lab',
       'VLAN  Name         Status',
       '10    HR           active',
       '20    Sales        active',
       '90    Management   active'
     ]); } },
-    { name: 'ping ashar', help: 'check I am reachable', run: function () { printLines([
-      'Sending 5, 100-byte ICMP Echos to ashar, timeout is 2 seconds:',
-      '!!!!!',
-      'Success rate is 100 percent (5/5). Email me to say hello.'
-    ], 'ok'); } },
-    { name: 'github', help: 'open my GitHub', run: function () {
+    { name: 'subnet', label: 'subnet <net>/<len> [new]', help: 'subnet calculator', scope: 'exec', args: true, min: 3, run: subnetCalc },
+    { name: 'history', help: 'commands you have run', scope: 'exec', run: function () {
+      if (!history.length) { printLines(['(no commands yet)'], 'k'); return; }
+      printLines(history.map(function (h, i) { return pad(i + 1, 3) + '  ' + h; }));
+    } },
+    { name: 'show history', hidden: true, scope: 'exec', run: function () { COMMANDS.filter(function (c) { return c.name === 'history'; })[0].run(); } },
+    { name: 'ping', label: 'ping ashar', help: 'ping my site, then me', scope: 'exec', args: true, min: 2, run: pingCmd },
+    { name: 'github', help: 'open my GitHub', scope: 'exec', run: function () {
       printLines(['Opening ' + GITHUB_URL.replace('https://', '') + ' in a new tab...']);
       window.open(GITHUB_URL, '_blank', 'noopener');
     } },
-    { name: 'resume', help: 'download my resume', run: function () { printLines(['Choose light or dark in the window that opens...']); openPrint(termIn, 'dl'); } },
-    { name: 'contact', help: 'jump to my email address', run: function () {
+    { name: 'resume', help: 'download my resume', scope: 'exec', run: function () { printLines(['Choose light or dark in the window that opens...']); openPrint(termIn, 'dl'); } },
+    { name: 'contact', help: 'jump to my email address', scope: 'exec', run: function () {
       printLines(['Opening the contact section...']);
-      $('#contact').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      goContact();
     } },
-    { name: 'clear', help: 'clear the screen', run: function () { termOut.innerHTML = ''; } },
-    { name: 'help', help: 'list commands', run: function () {
-      var rows = ['Commands (abbreviations work, Tab completes):'];
-      COMMANDS.forEach(function (c) { if (c.name !== 'help') rows.push('  ' + (c.name + '                    ').slice(0, 18) + c.help); });
+    { name: 'hire ashar', hidden: true, scope: 'exec', run: function () {
+      printLines(['Offer received. Routing you to the contact section...'], 'ok');
+      goContact();
+    } },
+    { name: 'enable', help: 'privileged mode', scope: 'exec', run: function () { if (MODE === 'user') setMode('priv'); } },
+    { name: 'disable', help: 'back to user mode', scope: 'priv', run: function () { setMode('user'); } },
+    { name: 'configure terminal', help: 'configuration mode', scope: 'priv', run: function () {
+      printLines(['Enter configuration commands, one per line. End with CNTL/Z.']);
+      setMode('cfg');
+    } },
+    { name: 'copy running-config startup-config', label: 'copy run start', help: 'save the config', scope: 'priv', run: function () {
+      printLines(['Destination filename [startup-config]?']);
+      seq([
+        [500, function () { printLines(['Building configuration...']); }],
+        [900, function () { printLines(['[OK]'], 'ok'); printLines(['Saved. (This is a website, so it quietly forgets on refresh.)'], 'k'); }]
+      ]);
+    } },
+    { name: 'reload', help: 'restart the console', scope: 'priv', run: function () {
+      printLines(['Proceed with reload? [confirm]']);
+      pending = 'reload';
+    } },
+    { name: 'hostname', label: 'hostname <name>', help: 'rename this device', scope: 'cfg', args: true, min: 3, run: function (args) {
+      if (!args.length) { printLines(['% Incomplete command. Usage: hostname <name>'], 'err'); return; }
+      if (!/^[A-Za-z][A-Za-z0-9-]{0,19}$/.test(args[0])) { printLines(['% Invalid hostname. Use letters, digits and hyphens, up to 20 characters, starting with a letter.'], 'err'); return; }
+      HOST = args[0]; setMode(MODE);
+    } },
+    { name: 'do', label: 'do <command>', help: 'run an exec command', scope: 'cfg', args: true, min: 2, run: function (args) {
+      if (!args.length) { printLines(['% Incomplete command. Example: do show about'], 'err'); return; }
+      execute(args.join(' '), 'priv');
+    } },
+    { name: 'end', help: 'leave configuration mode', scope: 'cfg', run: function () { setMode('priv'); } },
+    { name: 'exit', help: 'go back one level', scope: 'any', run: function () {
+      if (MODE === 'cfg') setMode('priv');
+      else if (MODE === 'priv') setMode('user');
+      else printLines(['% Already at the top level. Close the tab to disconnect.'], 'k');
+    } },
+    { name: 'clear', help: 'clear the screen', scope: 'any', run: function () { cancelTimers(); termOut.innerHTML = ''; } },
+    { name: 'help', help: 'list commands', scope: 'any', run: function () {
+      var rows = [MODE === 'cfg' ? 'Configuration mode (abbreviations work, Tab completes):' : 'Commands (abbreviations work, Tab completes):'];
+      COMMANDS.forEach(function (c) {
+        if (c.name === 'help' || c.hidden || !visible(c, MODE)) return;
+        rows.push('  ' + ((c.label || c.name) + '                              ').slice(0, 26) + ' ' + c.help);
+      });
       printLines(rows, 'k');
     } }
   ];
+  var HELP = COMMANDS[COMMANDS.length - 1];
+
+  function visible(c, mode) {
+    if (c.scope === 'any') return true;
+    if (c.scope === 'exec') return mode !== 'cfg';
+    if (c.scope === 'priv') return mode === 'priv';
+    if (c.scope === 'cfg') return mode === 'cfg';
+    return true;
+  }
+  function blocked(c, mode) {
+    if (c.scope === 'any' || visible(c, mode)) return null;
+    if (c.scope === 'cfg') return '% Available in configuration mode only. Type enable, then configure terminal.';
+    if (mode === 'cfg') return "% Invalid input in configuration mode. Put 'do' in front, for example: do show about";
+    return "% That command needs privileged mode. Type enable first.";
+  }
   function resolveCmd(raw) {
-    var words = raw.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    if (!words.length) return { t: 'empty' };
-    if (words[0] === '?') return { t: 'cmd', cmd: COMMANDS[COMMANDS.length - 1] };
+    var toks = raw.trim().split(/\s+/).filter(Boolean);
+    if (!toks.length) return { t: 'empty' };
+    var words = toks.map(function (w) { return w.toLowerCase(); });
+    if (words[0] === '?') return { t: 'cmd', cmd: HELP, args: [] };
     var full = [], partial = false;
     COMMANDS.forEach(function (cmd) {
       var cw = cmd.name.split(' ');
+      if (cmd.args) {
+        if (cw[0].indexOf(words[0]) !== 0) return;
+        if (words[0].length >= (cmd.min || cw[0].length)) full.push({ cmd: cmd, args: toks.slice(1) }); else partial = true;
+        return;
+      }
       var ok = words.length <= cw.length && words.every(function (w, i) { return cw[i].indexOf(w) === 0; });
       if (!ok) return;
-      if (words.length === cw.length) full.push(cmd); else partial = true;
+      if (words.length === cw.length) full.push({ cmd: cmd, args: [] }); else partial = true;
     });
-    if (full.length === 1) return { t: 'cmd', cmd: full[0] };
+    if (full.length === 1) return { t: 'cmd', cmd: full[0].cmd, args: full[0].args };
     if (full.length > 1) return { t: 'ambig' };
     if (partial) return { t: 'incomplete' };
     return { t: 'invalid' };
   }
-  function runCommand(raw) {
-    echo(raw);
+  function execute(raw, mode) {
     var r = resolveCmd(raw);
-    if (r.t === 'cmd') r.cmd.run();
+    if (r.t === 'cmd') {
+      var why = blocked(r.cmd, mode);
+      if (why) printLines([why], 'err'); else r.cmd.run(r.args);
+    }
     else if (r.t === 'ambig') printLines(['% Ambiguous command. Type ? for a list of commands.'], 'err');
     else if (r.t === 'incomplete') printLines(['% Incomplete command. Type ? for a list of commands.'], 'err');
     else if (r.t === 'invalid') printLines(['% Invalid input detected. Type ? for a list of commands.'], 'err');
     termOut.scrollTop = termOut.scrollHeight;
   }
+  function runCommand(raw, fromButton) {
+    if (booting) return;
+    abortPing(true);
+    if (pending) {
+      var ans = raw.trim().toLowerCase(), what = pending;
+      pending = null;
+      if (!fromButton) {
+        echo(raw, true);
+        if (what === 'reload' && (ans === '' || ans === 'y' || ans === 'yes' || ans === 'confirm')) { doReload(); return; }
+        printLines(['% Reload cancelled.'], 'k'); return;
+      }
+    }
+    /* quick-command buttons always work: inside configuration mode they run through "do" */
+    if (fromButton && MODE === 'cfg') raw = 'do ' + raw;
+    if (raw.trim()) { history.push(raw.trim()); if (history.length > 50) history.shift(); }
+    hIdx = history.length;
+    echo(raw);
+    execute(raw, MODE);
+  }
   $('#termForm').addEventListener('submit', function (e) {
     e.preventDefault();
     var raw = termIn.value;
     termIn.value = '';
-    if (raw.trim()) { history.push(raw); }
-    hIdx = history.length;
-    runCommand(raw);
+    runCommand(raw, false);
   });
   termIn.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowUp') {
@@ -1622,12 +1916,18 @@ footer a:hover { color: var(--cyan); }
     } else if (e.key === 'Tab') {
       var v = termIn.value.toLowerCase().replace(/^\s+/, '');
       if (!v) return;
-      var m = COMMANDS.filter(function (c) { return c.name.indexOf(v) === 0; });
-      if (m.length === 1) { e.preventDefault(); termIn.value = m[0].name; }
+      var m = COMMANDS.filter(function (c) { return !c.hidden && visible(c, MODE) && c.name.indexOf(v) === 0; });
+      if (m.length === 1) { e.preventDefault(); termIn.value = m[0].name + (m[0].args ? ' ' : ''); }
+    } else if (e.ctrlKey && (e.key === 'c' || e.key === 'C') && pingBusy && termIn.selectionStart === termIn.selectionEnd) {
+      e.preventDefault();
+      echo('^C'); abortPing(true);
+    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && MODE === 'cfg') {
+      e.preventDefault();
+      echo('^Z'); setMode('priv');
     }
   });
   $$('#termCmds button').forEach(function (b) {
-    b.addEventListener('click', function () { runCommand(b.getAttribute('data-cmd')); });
+    b.addEventListener('click', function () { runCommand(b.getAttribute('data-cmd'), true); });
   });
   printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
   echo('show about');
