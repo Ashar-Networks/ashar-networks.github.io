@@ -2161,17 +2161,8 @@ footer a:hover { color: var(--cyan); }
   echo('show about');
   COMMANDS[0].run();
 
-  /* ---------- easter eggs ---------- */
-  /* 1. Leave the tab and the request "times out"; come back and Ashar replies. */
-  (function () {
-    var base = document.title, back = 0;
-    document.addEventListener('visibilitychange', function () {
-      clearTimeout(back);
-      if (document.hidden) { document.title = 'Request timed out...'; }
-      else { document.title = 'Reply from Ashar'; back = setTimeout(function () { document.title = base; }, 2500); }
-    });
-  })();
-  /* 2. A hello for anyone who opens the browser console. */
+  /* ---------- easter egg ---------- */
+  /* A hello for anyone who opens the browser console. */
   try {
     var ART = [
       '    _    ____  _   _    _    ____',
