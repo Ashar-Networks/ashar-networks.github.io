@@ -127,6 +127,15 @@ ul, ol { padding: 0; }
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
+/* ---------- availability bar (scrolls away; the navbar stays sticky below it) ---------- */
+.avail { background: rgba(var(--cyan-rgb), 0.08); border-bottom: 1px solid rgba(var(--cyan-rgb), 0.22); font-family: var(--f-mono); font-size: 12px; letter-spacing: .02em; padding-top: env(safe-area-inset-top, 0px); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.avail .in { display: flex; align-items: center; gap: 10px; min-height: 36px; padding-block: 6px; }
+.avail .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); flex: none; animation: ping 2.4s ease-out infinite; }
+.avail b { font-weight: 500; color: var(--fg); }
+.avail .x { color: var(--muted); }
+.avail .more { margin-left: auto; color: var(--cyan); text-decoration: none; white-space: nowrap; }
+.avail .more:hover { text-decoration: underline; text-underline-offset: 3px; }
+
 /* ---------- navbar ---------- */
 .top {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
@@ -203,6 +212,8 @@ h1 em, h2 em { font-style: italic; background: linear-gradient(90deg, var(--indi
 .term-out { container-type: inline-size; }
 .tline.hl { display: grid; grid-template-columns: 26ch minmax(0, 1fr); column-gap: 1ch; padding-left: 2ch; }
 .tline.hl .hc { overflow-wrap: anywhere; }
+.tline.kv { display: grid; grid-template-columns: 12ch minmax(0, 1fr); column-gap: 1ch; }
+.tline.kv .kk { color: var(--indigo); }
 @container (max-width: 440px) {
   .tline.hl { grid-template-columns: minmax(0, 1fr); margin-top: 5px; }
   .tline.hl .hd { padding-left: 2ch; opacity: .8; }
@@ -237,6 +248,15 @@ h2.t { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-s
 .card > * { position: relative; }
 .card h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; }
 .kicker { font-family: var(--f-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+/* availability */
+.av-list { margin-top: 14px; display: grid; }
+.av-list > div { display: grid; grid-template-columns: minmax(150px, 230px) minmax(0, 1fr); gap: 6px 24px; padding: 14px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.av-list dt { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.av-list dd { color: var(--fg); }
+.av-list dd a { color: var(--cyan); text-underline-offset: 3px; }
+.av-note { margin-top: 6px; color: var(--fg-2); }
+.card .btns.av-btns { margin-top: 22px; }
 
 /* about */
 .about { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px; align-items: start; }
@@ -490,6 +510,8 @@ footer a:hover { color: var(--cyan); }
   .hop-body { padding: 0 16px 18px 56px; }
   .layer { grid-template-columns: 28px minmax(0, 1fr) 24px; }
   .layer .pdu { display: none; }
+  .avail .x { display: none; }
+  .av-list > div { grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 12px 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -503,6 +525,14 @@ footer a:hover { color: var(--cyan); }
 <canvas id="bg" aria-hidden="true"></canvas>
 
 <div class="page">
+  <!-- Availability bar. Edit the words here and in the "availability" section below when things change; delete this block to hide it. -->
+  <div class="avail">
+    <div class="in">
+      <span class="dot" aria-hidden="true"></span>
+      <span><b>Available full-time from July 2027</b><span class="x"> · Junior network roles · Gold Coast &amp; Brisbane</span></span>
+      <a class="more" href="#availability">Details</a>
+    </div>
+  </div>
   <header class="top" id="top">
     <div class="in">
       <div class="bar">
@@ -863,6 +893,31 @@ footer a:hover { color: var(--cyan); }
       </div>
     </section>
 
+    <!-- Availability. The console command "show availability" and the copy button both read these rows, so this is the one place to edit. -->
+    <section class="s" id="availability">
+      <div class="in">
+        <div class="sh rv">
+          <p class="eyebrow"><span class="pr">ashar#</span> show availability</p>
+          <h2 class="t">The questions that decide an <em>application</em>.</h2>
+        </div>
+        <div class="card rv">
+          <h3>Answered before you have to ask.</h3>
+          <dl class="av-list">
+            <div><dt data-short="Status">Status</dt><dd><span class="st doing"><i></i>Open to junior network roles</span></dd></div>
+            <div><dt data-short="Start">Start date</dt><dd>Full-time from July 2027, when my diploma finishes.</dd></div>
+            <div><dt data-short="Work">Where I will work</dt><dd>Gold Coast and Brisbane. On-site, hybrid or remote.</dd></div>
+            <div><dt data-short="Relocation">Relocation</dt><dd>Open to it for the right role.</dd></div>
+            <div><dt data-short="Referees">Referees</dt><dd>Available on request.</dd></div>
+            <div><dt data-short="Contact">Fastest way to reach me</dt><dd>Email. I reply within 1 business day.</dd></div>
+          </dl>
+          <div class="btns av-btns">
+            <a class="btn primary" href="#contact">Get in touch</a>
+            <button class="btn" id="copyAvail" type="button">Copy these answers</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="s" id="contact">
       <div class="in">
         <div class="sh rv">
@@ -1110,7 +1165,7 @@ footer a:hover { color: var(--cyan); }
     if (reduce) draw(); else start();
   }
   document.addEventListener('click', function (e) {
-    if (e.target.closest && e.target.closest('a,button,input,textarea,select,summary,label,[role="tab"],.card,.term,.top,.toast,.box')) return;
+    if (e.target.closest && e.target.closest('a,button,input,textarea,select,summary,label,[role="tab"],.card,.term,.top,.avail,.toast,.box')) return;
     ripple(e.clientX, e.clientY);
   });
 
@@ -1514,6 +1569,18 @@ footer a:hover { color: var(--cyan); }
   $('#copyMail').addEventListener('click', function () {
     copyText(EMAIL, function () { toast('Copy is blocked here. Select the address instead.'); });
   });
+  /* availability: the page is the source, so the console command and the copy button stay in step with it */
+  function availRows() {
+    return $$('#availability .av-list > div').map(function (r) {
+      var dt = $('dt', r), dd = $('dd', r);
+      return { key: dt.textContent.trim(), short: dt.getAttribute('data-short') || dt.textContent.trim(), val: dd.textContent.trim() };
+    });
+  }
+  var copyAv = $('#copyAvail');
+  if (copyAv) copyAv.addEventListener('click', function () {
+    var lines = ['Ashar | application answers'].concat(availRows().map(function (r) { return r.key + ': ' + r.val; }), ['Email: ' + EMAIL]);
+    copyText(lines.join('\n'), function () { toast('Copy is blocked here. Select the text instead.'); });
+  });
 
   /* ---------- hero console ---------- */
   var termOut = $('#termOut'), termIn = $('#termIn'), termLab = $('#termLab');
@@ -1538,6 +1605,15 @@ footer a:hover { color: var(--cyan); }
       d.textContent = t;
       termOut.appendChild(d);
     });
+    termOut.scrollTop = termOut.scrollHeight;
+  }
+  function printKV(k, v, i) {
+    var d = document.createElement('div'), a = document.createElement('span'), b = document.createElement('span');
+    d.className = 'tline kv';
+    d.style.setProperty('--i', Math.min(i || 0, 14));
+    a.className = 'kk'; a.textContent = k; b.textContent = v;
+    d.appendChild(a); d.appendChild(b);
+    termOut.appendChild(d);
     termOut.scrollTop = termOut.scrollHeight;
   }
   function echo(raw, plain) {
@@ -1786,6 +1862,9 @@ footer a:hover { color: var(--cyan); }
       '[ ] After   Bachelor of IT (Networks and Cyber Security), Griffith University',
       '[ ] Goal    Junior network engineer role'
     ]); } },
+    { name: 'show availability', help: 'when and where I can start', scope: 'exec', run: function () {
+      availRows().forEach(function (r, i) { printKV(r.short, r.val, i); });
+    } },
     { name: 'show clock', help: 'time on the Gold Coast', scope: 'exec', run: showClock },
     { name: 'show vlan brief', help: 'VLANs in my campus lab', scope: 'exec', run: function () { printLines([
       'Campus switching and routing lab',
