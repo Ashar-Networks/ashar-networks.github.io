@@ -64,6 +64,9 @@
   --indigo-rgb: 129, 140, 248;
   --glow-rgb: 99, 102, 241;
   --shade-rgb: 0, 0, 0;
+  --btn-fg: #fff;
+  --btn-hover: #5b52f0;
+  --btn-edge: rgba(165, 180, 252, 0.5);
   --f-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
   --f-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --f-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
@@ -170,8 +173,8 @@ ul, ol { padding: 0; }
   background: var(--raise); transition: border-color .2s, box-shadow .2s, background .2s;
 }
 .btn:hover { border-color: var(--line-hi); background: rgba(var(--indigo-rgb), 0.12); }
-.btn.primary { color: #fff; background: var(--indigo-btn); border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 28px -6px var(--glow); }
-.btn.primary:hover { background: #5b52f0; box-shadow: 0 0 36px -4px rgba(var(--glow-rgb), 0.6); }
+.btn.primary { color: var(--btn-fg); background: var(--indigo-btn); border-color: var(--btn-edge); box-shadow: 0 0 28px -6px var(--glow); }
+.btn.primary:hover { background: var(--btn-hover); box-shadow: 0 0 36px -4px rgba(var(--glow-rgb), 0.6); }
 .btn.sm { padding: 8px 14px; font-size: 14px; }
 .btn[disabled] { opacity: .6; cursor: progress; }
 .magnet { transition: transform .25s cubic-bezier(.2, .7, .2, 1), border-color .2s, box-shadow .2s, background .2s; will-change: transform; }
@@ -256,7 +259,7 @@ h2.t { margin-top: 12px; font-family: var(--f-display); font-weight: 400; font-s
 .av-list dd { color: var(--fg); }
 .av-list dd a { color: var(--cyan); text-underline-offset: 3px; }
 .av-note { margin-top: 6px; color: var(--fg-2); }
-.card .btns.av-btns { margin-top: 22px; }
+.card .btns.av-btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
 
 /* about */
 .about { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 20px; align-items: start; }
@@ -373,7 +376,7 @@ button.hop-row:hover { background: var(--raise); }
 .cred-tbl td.dt small { display: block; margin-top: 4px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); }
 .st { display: inline-flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: 12px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); white-space: nowrap; }
 .st i { width: 7px; height: 7px; border-radius: 50%; flex: none; }
-.st.pass { background: var(--indigo-btn); border-color: rgba(165, 180, 252, 0.5); color: #fff; }
+.st.pass { background: var(--indigo-btn); border-color: var(--btn-edge); color: var(--btn-fg); }
 .st.pass i { background: #a5f3fc; }
 .st.doing { color: var(--cyan); border-color: rgba(var(--cyan-rgb), 0.4); }
 .st.doing i { background: var(--cyan); animation: ping 2.4s ease-out infinite; }
@@ -425,7 +428,7 @@ details.txt pre { margin: 12px 0 0; max-height: 260px; overflow: auto; padding: 
 .prsheet { z-index: 65; padding: calc(20px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
 .prsheet:not([hidden]) { display: flex; }
 .prsheet[data-kind="dl"] .only-print { display: none; }
-.prsheet[data-kind="dl"] #prDl { color: #fff; background: var(--indigo-btn); border-color: rgba(165, 180, 252, 0.5); box-shadow: 0 0 28px -6px var(--glow); }
+.prsheet[data-kind="dl"] #prDl { color: var(--btn-fg); background: var(--indigo-btn); border-color: var(--btn-edge); box-shadow: 0 0 28px -6px var(--glow); }
 .pr-card { width: min(100%, 640px); margin: auto; padding: clamp(20px, 4vw, 28px); border: 1px solid var(--line-hi); border-radius: 14px; background: var(--surface-solid); box-shadow: 0 30px 80px -30px rgba(var(--shade-rgb), .9); display: grid; gap: 14px; }
 .pr-card h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(1.6rem, 4vw, 2rem); line-height: 1.15; }
 .pr-card p.sm { color: var(--muted); font-size: 15px; }
@@ -595,6 +598,7 @@ footer a:hover { color: var(--cyan); }
               <button type="button" data-cmd="show experience">show experience</button>
               <button type="button" data-cmd="show education">show education</button>
               <button type="button" data-cmd="show roadmap">show roadmap</button>
+              <button type="button" data-cmd="show availability">show availability</button>
               <button type="button" data-cmd="ping ashar">ping ashar</button>
               <button type="button" data-cmd="?">?</button>
             </div>
@@ -1552,6 +1556,69 @@ footer a:hover { color: var(--cyan); }
 
   /* ---------- light / dark switch (dark is the default) ---------- */
   var root = document.documentElement, themeBtn = $('#themeBtn');
+  /* ---------- colour scheme (hidden console command: color random / color reset) ----------
+     A scheme is two hues: the accent (buttons, links, glow, italic headline start) and the main
+     colour (the cyan: dots, labels, hover borders, headline end, background packets).
+     Indigo + cyan is the original look, so it simply removes the overrides.
+     Lightness is searched per mode until text contrast is at least 4.5:1, so every random scheme stays readable. */
+  var ACCENT_VARS = ['--indigo', '--indigo-btn', '--indigo-rgb', '--glow', '--glow-rgb', '--line-hi', '--btn-fg', '--btn-hover', '--btn-edge', '--cyan', '--cyan-rgb', '--pkt'];
+  var accentName = 'indigo', savedAccent = 'indigo';   /* running config and startup config: 'indigo', 'rainbow' or 'hue,hue' */
+  var rbTimer = 0, rbHue = 0, RB_OFFSET = 310;          /* rainbow: the main colour trails the accent by 50 degrees */
+  try { var sa = localStorage.getItem('ashar-accent'); if (sa && (sa === 'rainbow' || /^\d{1,3},\d{1,3}$/.test(sa))) { accentName = savedAccent = sa; } } catch (e) {}
+  function hsl(h, sat, l) {
+    sat /= 100; l /= 100;
+    var k = function (n) { return (n + h / 30) % 12; }, am = sat * Math.min(l, 1 - l);
+    var f = function (n) { return l - am * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); };
+    return [Math.round(255 * f(0)), Math.round(255 * f(8)), Math.round(255 * f(4))];
+  }
+  function lum(c) {
+    var x = c.map(function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2];
+  }
+  function contrast(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+  function hex(c) { return '#' + c.map(function (v) { return (v < 16 ? '0' : '') + v.toString(16); }).join(''); }
+  /* nudge lightness (dir +1 lighter, -1 darker) until the colour reads against the background */
+  function readable(h, sat, l, bg, dir) {
+    var c = hsl(h, sat, l), n = 0;
+    while (contrast(c, bg) < 4.6 && n++ < 40) { l += dir; c = hsl(h, sat, l); }
+    return c;
+  }
+  function scheme(h1, h2, light) {
+    var bg = light ? [246, 246, 249] : [9, 9, 11], dir = light ? -1 : 1;
+    var t = readable(h1, light ? 80 : 90, light ? 36 : 68, bg, dir);
+    var c2 = readable(h2, light ? 85 : 85, light ? 32 : 58, bg, dir);
+    /* button: white text on a fill dark enough for it, or dark text on a bright fill (yellows and greens) */
+    var white = [255, 255, 255], ink = [24, 24, 27], fill = null, fg = '#fff', l;
+    for (l = 46; l >= 36; l--) { var f1 = hsl(h1, 82, l); if (contrast(f1, white) >= 4.6) { fill = f1; break; } }
+    var hover;
+    if (fill) { hover = hsl(h1, 82, l + 6); }
+    else { fill = hsl(h1, 92, 55); hover = hsl(h1, 92, 62); fg = '#18181b'; }
+    var glow = hsl(h1, 85, 58);
+    return { t: t, c: c2, fill: fill, hover: hover, fg: fg, glow: glow, pkt: light ? c2 : hsl(h2, 100, 95) };
+  }
+  function stopRainbow() { if (rbTimer) { clearInterval(rbTimer); rbTimer = 0; } }
+  function rbTick() { if (document.hidden) return; rbHue = (rbHue + 1) % 360; paint(rbHue, (rbHue + RB_OFFSET) % 360); }
+  function applyAccent(name) {
+    var m = /^(\d+),(\d+)$/.exec(name || '');
+    if (name === 'rainbow') {
+      if (reduce) { m = [0, Math.round(rbHue), Math.round((rbHue + RB_OFFSET) % 360)]; accentName = m[1] + ',' + m[2]; stopRainbow(); }   /* reduced motion: hold one colour instead of cycling */
+      else { accentName = 'rainbow'; if (!rbTimer) rbTimer = setInterval(rbTick, 70); paint(rbHue, (rbHue + RB_OFFSET) % 360); return true; }
+    } else { stopRainbow(); accentName = m ? name : 'indigo'; }
+    if (!m) { ACCENT_VARS.forEach(function (v) { root.style.removeProperty(v); }); recolor(); return true; }
+    paint(+m[1], +m[2]);
+    return true;
+  }
+  function paint(h1, h2) {
+    var st = root.style;
+    var light = root.getAttribute('data-mode') === 'light', k = scheme(h1, h2, light), rgb = function (c) { return c.join(','); };
+    st.setProperty('--indigo', hex(k.t)); st.setProperty('--indigo-rgb', rgb(k.t));
+    st.setProperty('--indigo-btn', hex(k.fill)); st.setProperty('--btn-hover', hex(k.hover)); st.setProperty('--btn-fg', k.fg);
+    st.setProperty('--btn-edge', 'rgba(' + rgb(k.t) + ',.5)');
+    st.setProperty('--glow-rgb', rgb(k.glow)); st.setProperty('--glow', 'rgba(' + rgb(k.glow) + ',' + (light ? '.28' : '.35') + ')');
+    st.setProperty('--line-hi', 'rgba(' + rgb(k.t) + ',.45)');
+    st.setProperty('--cyan', hex(k.c)); st.setProperty('--cyan-rgb', rgb(k.c)); st.setProperty('--pkt', hex(k.pkt));
+    recolor();
+  }
   function currentMode() { return root.getAttribute('data-mode') === 'light' ? 'light' : 'dark'; }
   function applyMode(m, save) {
     root.setAttribute('data-mode', m);
@@ -1561,7 +1628,7 @@ footer a:hover { color: var(--cyan); }
     $$('.thumb img, .lb-page img').forEach(function (i) { if (i.getAttribute('src') !== img) i.setAttribute('src', img); });
     $('#lbOpen').setAttribute('href', PDFS[m]);
     $('#lbName').textContent = PDFS[m] + ' · 1 page';
-    recolor();
+    applyAccent(accentName);
     if (save) { try { localStorage.setItem('ashar-theme', m); } catch (e) {} }
   }
   themeBtn.addEventListener('click', function () { applyMode(currentMode() === 'light' ? 'dark' : 'light', true); });
@@ -1799,6 +1866,30 @@ footer a:hover { color: var(--cyan); }
     ]);
   }
 
+  /* ----- hidden: repaint the colour scheme ----- */
+  function colorCmd(args) {
+    var n = (args[0] || '').toLowerCase();
+    if (n === 'reset' || n === 'default' || n === 'indigo') {
+      applyAccent('indigo');
+      printLines(['Colours back to the original indigo and cyan.'], 'ok');
+      return;
+    }
+    if (n === 'random' || n === 'rainbow') {
+      rbHue = Math.floor(Math.random() * 360);
+      applyAccent('rainbow');
+      printLines([reduce ? 'Reduced motion is on, so the colours are held still. (copy run start keeps them.)' : 'Rainbow mode on. (color stop freezes it, color reset ends it, copy run start keeps it.)'], 'ok');
+      return;
+    }
+    if (n === 'stop' || n === 'freeze') {
+      if (accentName !== 'rainbow') { printLines(['Nothing is cycling.'], 'k'); return; }
+      applyAccent(Math.round(rbHue) + ',' + Math.round((rbHue + RB_OFFSET) % 360));
+      printLines(['Colours frozen. (copy run start keeps them.)'], 'ok');
+      return;
+    }
+    if (!args.length) { printLines(['Usage: color random    Cycle accent and main colour through the rainbow', '       color stop      Freeze the current colours', '       color reset     Back to the original'], 'k'); return; }
+    printLines(['% Unknown option. Use: color random, color stop, color reset.'], 'err');
+  }
+
   /* ----- reload (boot sequence) ----- */
   function doReload() {
     cancelTimers();
@@ -1811,6 +1902,7 @@ footer a:hover { color: var(--cyan); }
       [400, function () { printLines(['%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan10, changed state to up', '%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan20, changed state to up', '%LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan90, changed state to up'], 'k'); }],
       [600, function () {
         HOST = 'ashar'; setMode('priv'); history = []; hIdx = 0; pending = null;
+        if (accentName !== savedAccent) applyAccent(savedAccent);
         termOut.innerHTML = '';
         printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
         echo('show about'); COMMANDS[0].run();
@@ -1889,6 +1981,8 @@ footer a:hover { color: var(--cyan); }
       printLines(['Opening the contact section...']);
       goContact();
     } },
+    { name: 'color', hidden: true, scope: 'any', args: true, min: 5, run: colorCmd },
+    { name: 'colour', hidden: true, scope: 'any', args: true, min: 6, run: colorCmd },
     { name: 'hire ashar', hidden: true, scope: 'exec', run: function () {
       printLines(['Offer received. Routing you to the contact section...'], 'ok');
       goContact();
@@ -1903,7 +1997,14 @@ footer a:hover { color: var(--cyan); }
       printLines(['Destination filename [startup-config]?']);
       seq([
         [500, function () { printLines(['Building configuration...']); }],
-        [900, function () { printLines(['[OK]'], 'ok'); printLines(['Saved. (This is a website, so it quietly forgets on refresh.)'], 'k'); }]
+        [900, function () {
+          printLines(['[OK]'], 'ok');
+          var keep = false;
+          if (accentName !== savedAccent) {
+            try { if (accentName === 'indigo') localStorage.removeItem('ashar-accent'); else localStorage.setItem('ashar-accent', accentName); savedAccent = accentName; keep = true; } catch (e) {}
+          }
+          printLines([keep ? 'Saved. Your colours will be remembered on this browser.' : 'Saved. (This is a website, so it quietly forgets on refresh.)'], 'k');
+        }]
       ]);
     } },
     { name: 'reload', help: 'restart the console', scope: 'priv', run: function () {
