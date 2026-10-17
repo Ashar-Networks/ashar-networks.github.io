@@ -20,6 +20,11 @@
 <meta name="author" content="Ashar">
 <meta property="og:locale" content="en_AU">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://ashar-networks.github.io/#site","url":"https://ashar-networks.github.io/","name":"Ashar","description":"Portfolio of Ashar, a networking and cloud engineering student on the Gold Coast.","inLanguage":"en-AU","publisher":{"@id":"https://ashar-networks.github.io/#person"}},{"@type":"Person","@id":"https://ashar-networks.github.io/#person","name":"Ashar","url":"https://ashar-networks.github.io/","email":"mailto:AsharNetworks@gmail.com","jobTitle":"Networking and Cloud Engineering Student","description":"Networking and cloud engineering student on the Gold Coast who has completed the Cisco CCNA coursework, seeking a junior network engineer role.","address":{"@type":"PostalAddress","addressLocality":"Gold Coast","addressRegion":"Queensland","addressCountry":"AU"},"sameAs":["https://github.com/Ashar-Networks"],"knowsAbout":["Cisco IOS","VLANs","OSPF","Spanning Tree Protocol","EtherChannel","Access control lists","NAT","DHCP","DNS","Windows Server","Active Directory","Hyper-V","Ubuntu","Cisco Packet Tracer"]}]}</script>
+<link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/instrument-serif-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin>
+<style>@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-latin-wght-normal.woff2) format('woff2')}@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;src:url(/fonts/jetbrains-mono-latin-wght-normal.woff2) format('woff2')}@font-face{font-family:'Instrument Serif';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/instrument-serif-latin-400-normal.woff2) format('woff2')}@font-face{font-family:'Instrument Serif';font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/instrument-serif-latin-400-italic.woff2) format('woff2')}</style>
 <title>Ashar | Networking and Cloud Engineering Student</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,9 +33,6 @@
 <meta property="og:description" content="Networking and cloud student on the Gold Coast, CCNA coursework complete. Labs, projects and resume.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ashar-networks.github.io/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap">
 <script>try{var __m=localStorage.getItem("ashar-theme");document.documentElement.setAttribute("data-mode",__m==="light"?"light":"dark");}catch(e){document.documentElement.setAttribute("data-mode","dark");}</script>
 <style>
 /* Layout concept: the page behaves like a network. A live topology sits fixed behind everything,
@@ -198,6 +200,13 @@ h1 em, h2 em { font-style: italic; background: linear-gradient(90deg, var(--indi
 .tline.err { color: var(--err); }
 .tline.ok { color: var(--cyan); }
 .tline a { color: var(--cyan); text-decoration: underline; text-underline-offset: 3px; }
+.term-out { container-type: inline-size; }
+.tline.hl { display: grid; grid-template-columns: 26ch minmax(0, 1fr); column-gap: 1ch; padding-left: 2ch; }
+.tline.hl .hc { overflow-wrap: anywhere; }
+@container (max-width: 440px) {
+  .tline.hl { grid-template-columns: minmax(0, 1fr); margin-top: 5px; }
+  .tline.hl .hd { padding-left: 2ch; opacity: .8; }
+}
 @keyframes lnin { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
 .term-cmds { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-top: 1px solid var(--line); }
 .term-cmds button { padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--raise); color: var(--fg-2); font: 400 12px/1.2 var(--f-mono); cursor: pointer; transition: border-color .2s, color .2s; }
@@ -589,7 +598,7 @@ footer a:hover { color: var(--cyan); }
             <div class="panel" id="p-work" role="tabpanel" aria-labelledby="tab-work" hidden>
               <h3>Start with what the customer needs</h3>
               <p>In the technology department at Officeworks I work out what each customer needs, then recommend technology that fits their budget, goals and use case.</p>
-              <p>For networking, that means sizing the solution to the number of devices, the size of the office, the budget and the NBN plan. I troubleshoot problems from simple faults to complex ones.</p>
+              <p>For networking, that means sizing the solution to the number of devices, the size of the premises, the budget and the NBN plan, for households and small businesses. I troubleshoot problems from simple faults to complex ones, including NBN connection issues.</p>
             </div>
             <div class="panel" id="p-next" role="tabpanel" aria-labelledby="tab-next" hidden>
               <h3>From the diploma to a degree</h3>
@@ -779,10 +788,11 @@ footer a:hover { color: var(--cyan); }
               </button>
               <div class="hop-body" id="hb1">
                 <ul>
-                  <li>Worked out what each customer needed, then recommended technology to fit their budget, goals and use case.</li>
-                  <li>Advised tens of customers on networking, choosing between product types and sizing the solution to their number of devices, office size, budget and NBN plan.</li>
-                  <li>Advised customers on choosing an NBN plan.</li>
-                  <li>Troubleshot customer issues from simple faults to complex ones.</li>
+                  <li>Assessed the needs of household and small-business customers and recommended technology to match their budget, goals and use case.</li>
+                  <li>Advised tens of customers on home and small-office networking, comparing product types and sizing solutions by number of devices, premises size, budget and NBN plan.</li>
+                  <li>Recommended mesh Wi-Fi systems to extend coverage, and faster Ethernet cabling to improve wired speeds.</li>
+                  <li>Troubleshot NBN connection issues and advised customers on choosing an NBN plan.</li>
+                  <li>Troubleshot customer faults from simple to complex.</li>
                 </ul>
               </div>
             </li>
@@ -1512,11 +1522,19 @@ footer a:hover { color: var(--cyan); }
 
   function promptText() { return HOST + (MODE === 'user' ? '>' : MODE === 'cfg' ? '(config)#' : '#'); }
   function setMode(m) { MODE = m; termLab.textContent = promptText(); }
+  /* wrapped lines hang under the text, not under the marker ("- ", "[x] Done", "Label:", a leading number or indent) */
+  function hangFor(t) {
+    var m = /^(\[.\] \S+\s+)/.exec(t) || /^(\s+)\S/.exec(t) || /^(\d+\s+)\S/.exec(t);
+    if (m) return m[1].length;
+    if (/^- /.test(t) || /^[A-Z][^:]{2,40}: /.test(t)) return 2;
+    return 0;
+  }
   function printLines(lines, cls) {
     lines.forEach(function (t, i) {
-      var d = document.createElement('div');
+      var d = document.createElement('div'), hg = hangFor(t);
       d.className = 'tline' + (cls ? ' ' + cls : '');
       d.style.setProperty('--i', Math.min(i, 14));
+      if (hg) { d.style.paddingLeft = hg + 'ch'; d.style.textIndent = '-' + hg + 'ch'; }
       d.textContent = t;
       termOut.appendChild(d);
     });
@@ -1688,7 +1706,7 @@ footer a:hover { color: var(--cyan); }
       var label = (i + 1) + '  ' + n2ip(sn) + '/' + nl;
       if (nl === 32) out.push(label + '   single host');
       else if (nl === 31) out.push(label + '   point-to-point, both addresses usable');
-      else out.push(label + '   broadcast ' + n2ip(uu.bc), '   usable ' + n2ip(uu.first) + ' - ' + n2ip(uu.last));
+      else out.push(label, '   usable ' + n2ip(uu.first) + ' - ' + n2ip(uu.last), '   broadcast ' + n2ip(uu.bc));
     }
     printLines(out, 'ok');
   }
@@ -1749,10 +1767,11 @@ footer a:hover { color: var(--cyan); }
     ]); } },
     { name: 'show experience', help: 'work history', scope: 'exec', run: function () { printLines([
       'Officeworks, Technology department. Part-time, 2 years.',
-      '- Worked out customer needs and recommended technology by budget, goals and use case',
-      '- Advised tens of customers on networking: product type, sizing by devices, office size, budget and NBN plan',
-      '- Advised customers on choosing an NBN plan',
-      '- Troubleshot issues from simple faults to complex ones'
+      '- Assessed the needs of household and small-business customers and recommended technology to match their budget, goals and use case',
+      '- Advised tens of customers on home and small-office networking, comparing product types and sizing solutions by number of devices, premises size, budget and NBN plan',
+      '- Recommended mesh Wi-Fi systems to extend coverage, and faster Ethernet cabling to improve wired speeds',
+      '- Troubleshot NBN connection issues and advised customers on choosing an NBN plan',
+      '- Troubleshot customer faults from simple to complex'
     ]); } },
     { name: 'show education', help: 'study and certification', scope: 'exec', run: function () { printLines([
       'Cisco CCNA coursework ... complete, exam not yet taken',
@@ -1829,12 +1848,20 @@ footer a:hover { color: var(--cyan); }
     } },
     { name: 'clear', help: 'clear the screen', scope: 'any', run: function () { cancelTimers(); termOut.innerHTML = ''; } },
     { name: 'help', help: 'list commands', scope: 'any', run: function () {
-      var rows = [MODE === 'cfg' ? 'Configuration mode (abbreviations work, Tab completes):' : 'Commands (abbreviations work, Tab completes):'];
+      printLines([MODE === 'cfg' ? 'Configuration mode (abbreviations work, Tab completes):' : 'Commands (abbreviations work, Tab completes):'], 'k');
+      var n = 1;
       COMMANDS.forEach(function (c) {
         if (c.name === 'help' || c.hidden || !visible(c, MODE)) return;
-        rows.push('  ' + ((c.label || c.name) + '                              ').slice(0, 26) + ' ' + c.help);
+        /* two columns on wide consoles, stacked on narrow ones, so a long description never wraps under the next command */
+        var d = document.createElement('div'), a = document.createElement('span'), b = document.createElement('span');
+        d.className = 'tline k hl';
+        d.style.setProperty('--i', Math.min(n++, 14));
+        a.className = 'hc'; a.textContent = c.label || c.name;
+        b.className = 'hd'; b.textContent = c.help;
+        d.appendChild(a); d.appendChild(b);
+        termOut.appendChild(d);
       });
-      printLines(rows, 'k');
+      termOut.scrollTop = termOut.scrollHeight;
     } }
   ];
   var HELP = COMMANDS[COMMANDS.length - 1];
@@ -1937,6 +1964,31 @@ footer a:hover { color: var(--cyan); }
   printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
   echo('show about');
   COMMANDS[0].run();
+
+  /* ---------- easter eggs ---------- */
+  /* 1. Leave the tab and the request "times out"; come back and Ashar replies. */
+  (function () {
+    var base = document.title, back = 0;
+    document.addEventListener('visibilitychange', function () {
+      clearTimeout(back);
+      if (document.hidden) { document.title = 'Request timed out...'; }
+      else { document.title = 'Reply from Ashar'; back = setTimeout(function () { document.title = base; }, 2500); }
+    });
+  })();
+  /* 2. A hello for anyone who opens the browser console. */
+  try {
+    var ART = [
+      '    _    ____  _   _    _    ____',
+      '   / \\  / ___|| | | |  / \\  |  _ \\',
+      '  / _ \\ \\___ \\| |_| | / _ \\ | |_) |',
+      ' / ___ \\ ___) |  _  |/ ___ \\|  _ <',
+      '/_/   \\_\\____/|_| |_/_/   \\_\\_| \\_\\'
+    ].join('\n');
+    console.log('%c' + ART, 'color:#22d3ee;font-family:monospace;line-height:1.15');
+    console.log('%cYou found the console. Hello.', 'color:#22d3ee;font:600 13px monospace');
+    console.log('%cLooking for a junior network engineer? ' + EMAIL, 'font:13px monospace');
+    console.log('%cNo frameworks here. This page is hand-written HTML, CSS and JavaScript. More in /humans.txt', 'color:#818cf8;font:12px monospace');
+  } catch (e) {}
 })();
 </script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d04c3636dad1462582f47ab68848e3c4"}'></script><!-- End Cloudflare Web Analytics -->
