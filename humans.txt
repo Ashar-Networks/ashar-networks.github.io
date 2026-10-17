@@ -12,4 +12,4 @@ Standards: HTML5, CSS3, JavaScript (no frameworks, no build step)
 Hosting: GitHub Pages
 Analytics: Cloudflare Web Analytics (cookie-free)
 Fonts: Inter, JetBrains Mono, Instrument Serif (SIL Open Font License, files in /fonts)
-Easter eggs: yes. Try the console, and try switching tabs.
+Easter eggs: yes. Try the hero console, and open the browser console for a hello.
