@@ -1,0 +1,15 @@
+/* TEAM */
+Name: Ashar
+Role: Design and development
+Site: https://ashar-networks.github.io/
+GitHub: https://github.com/Ashar-Networks
+Contact: AsharNetworks@gmail.com
+Location: Gold Coast, Queensland, Australia
+
+/* SITE */
+Last update: 2026/10/17
+Standards: HTML5, CSS3, JavaScript (no frameworks, no build step)
+Hosting: GitHub Pages
+Analytics: Cloudflare Web Analytics (cookie-free)
+Fonts: Inter, JetBrains Mono, Instrument Serif (SIL Open Font License, files in /fonts)
+Easter eggs: yes. Try the console, and try switching tabs.
