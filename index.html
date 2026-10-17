@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-AU">
 <head>
 <meta charset="utf-8">
 <meta name="theme-color" content="#09090b">
@@ -102,7 +102,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; } /* sections carry their own top padding, so land near the top edge: the heading then sits just under the sticky bar instead of a screenful below it */
 body {
   margin: 0;
   background: var(--bg);
@@ -1633,6 +1633,9 @@ footer a:hover { color: var(--cyan); }
   function applyMode(m, save) {
     root.setAttribute('data-mode', m);
     themeBtn.setAttribute('aria-checked', m === 'light' ? 'true' : 'false');
+    /* the browser's own chrome (the address bar on phones) follows the mode */
+    var metaTheme = $('meta[name="theme-color"]');
+    if (metaTheme) metaTheme.setAttribute('content', m === 'light' ? '#f6f6f9' : '#09090b');
     /* the resume you see, download and open follows the mode: white PDF in light, dark PDF in dark */
     var img = m === 'light' ? 'resume-page-light.png' : 'resume-page.png';
     $$('.thumb img, .lb-page img').forEach(function (i) { if (i.getAttribute('src') !== img) i.setAttribute('src', img); });
@@ -2152,10 +2155,24 @@ footer a:hover { color: var(--cyan); }
     } else if ((e.ctrlKey || e.metaKey) && (e.key === 'z' || e.key === 'Z') && MODE === 'cfg') {
       e.preventDefault();
       echo('^Z'); setMode('priv');
+    } else if (e.key === 'Escape' && termIn.value && !modalStack.length && !top.classList.contains('open')) {
+      termIn.value = '';   /* terminal habit: Escape wipes a half-typed line (never while a menu or modal is up) */
     }
   });
   $$('#termCmds button').forEach(function (b) {
-    b.addEventListener('click', function () { runCommand(b.getAttribute('data-cmd'), true); });
+    b.addEventListener('click', function (e) {
+      runCommand(b.getAttribute('data-cmd'), true);
+      /* pointer users get the prompt back so typing keeps flowing; keyboard users keep their focus on the chip */
+      if (e.detail && fine) termIn.focus();
+    });
+  });
+  /* clicking anywhere in the console (never on its own buttons or links) puts the cursor in the prompt.
+     Skipped on touch, where an unexpected keyboard would be rude, and while text is selected so copying still works. */
+  $('#term').addEventListener('click', function (e) {
+    if (!fine || (e.target.closest && e.target.closest('button, a, input, label, select, textarea'))) return;
+    var sel = window.getSelection();
+    if (sel && String(sel).length) return;
+    termIn.focus();
   });
   printLines(['Ashar network console. Type ? for commands, or tap one below.'], 'k');
   echo('show about');
